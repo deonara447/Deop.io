@@ -94,7 +94,7 @@ namespace Deop.io
             Square g = new Square(650, 300, 300, 2500, 30);
             squareList.Add(g);
 
-            squareGenerationSpeed = 900;
+            squareGenerationSpeed = 300;
             for (int i = 0; i <= 20; i++)
             {
                 addShape = true;
@@ -366,9 +366,9 @@ namespace Deop.io
                     Hexagon f = new Hexagon(hexagonX, hexagonY, hexagonSize, hexagonHp, hexagonDamage);
                     hexagonList.Add(f);
                     //later add to pentagon gen
-                    if (squareGenerationSpeed < 70)
+                    if (squareGenerationSpeed > 100)
                     {
-                        squareGenerationSpeed--;
+                        squareGenerationSpeed -= 3;
                     }
                 }
             }
