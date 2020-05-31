@@ -12,12 +12,13 @@ namespace Deop.io
         //variables in my class
         public SolidBrush botBrush;
         public int x, y, size, hp, damage, playerNumber, speed, bulletHealth, bulletDamage, bulletSpeed, reload, healthRegen, maxHealth, lvl, xp, boost;
-        public string botType, direction;
+        public string direction;
+        int random;
 
         //random generator
         Random randGen = new Random();
 
-        public Bot(SolidBrush _botBrush, int _playerNumber, string _botType, int _x, int _y, int _size, int _hp, int _damage, int _speed, string _direction, int _bulletHealth, int _bulletDamage, int _bulletSpeed, int _reload, int _healthRegen, int _maxHealth, int _lvl, int _xp, int _boost)
+        public Bot(SolidBrush _botBrush, int _playerNumber, int _x, int _y, int _size, int _hp, int _damage, int _speed, string _direction, int _bulletHealth, int _bulletDamage, int _bulletSpeed, int _reload, int _healthRegen, int _maxHealth, int _lvl, int _xp, int _boost)
         {
             x = _x;
             y = _y;
@@ -26,7 +27,6 @@ namespace Deop.io
             damage = _damage;
             botBrush = _botBrush;
             playerNumber = _playerNumber;
-            botType = _botType;
             speed = _speed;
             direction = _direction;
             bulletHealth = _bulletHealth;
@@ -73,6 +73,45 @@ namespace Deop.io
             }
 
             if (y < gs.Height - size)
+            {
+                if (direction == "down")
+                {
+                    y = y + speed;
+                }
+            }
+
+        }
+        public void Move(string movement, SinglePlayerScreen hs)
+        {
+            direction = movement;
+            //move players at movement speed but not off screen
+            if (x > 0)
+            {
+                if (direction == "left")
+                {
+                    x = x - speed;
+
+
+                }
+            }
+
+            if (x < hs.Width - size)
+            {
+                if (direction == "right")
+                {
+                    x = x + speed;
+                }
+            }
+
+            if (y > 0)
+            {
+                if (direction == "up")
+                {
+                    y = y - speed;
+                }
+            }
+
+            if (y < hs.Height - size)
             {
                 if (direction == "down")
                 {
@@ -148,7 +187,7 @@ namespace Deop.io
                     {
                         xp += 10;
                     }
-                    
+
                 }
                 if (s.x > x)
                 {
@@ -217,7 +256,7 @@ namespace Deop.io
                 {
                     xp += 100;
                 }
-                    if (h.x > x)
+                if (h.x > x)
                 {
                     x = x - 5;
                 }
@@ -238,7 +277,6 @@ namespace Deop.io
         }
         public void Respawn()
         {
-            botType = "basic";
             hp = 150;
             damage = 9;
             speed = 4;
@@ -263,6 +301,44 @@ namespace Deop.io
 
             }
 
+        }
+
+        public void BotRespawn()
+        {
+            random = randGen.Next(0, 8);
+            if (random == 0)
+            {
+                maxHealth += 50;
+            }
+            else if (random == 1)
+            {
+                healthRegen += 4;
+            }
+            else if (random == 2)
+            {
+                damage += 10;
+            }
+            else if (random == 3)
+            {
+                bulletSpeed += 8;
+            }
+            else if (random == 4)
+            {
+                bulletHealth += 13;
+            }
+            else if (random == 5)
+            {
+                bulletDamage += 17;
+            }
+            else if (random == 6)
+            {
+                reload -= 4;
+            }
+            else
+            {
+                speed += 2;
+            }
+            hp = maxHealth;
         }
     }
 }

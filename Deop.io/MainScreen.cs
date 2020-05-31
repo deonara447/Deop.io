@@ -22,7 +22,6 @@ namespace Deop.io
         public void MainScreen_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             Form f = this.FindForm();
-            GameScreen gs = new GameScreen();
             switch (e.KeyCode)
             {
                 case Keys.Escape:
@@ -30,11 +29,12 @@ namespace Deop.io
                     Application.Exit();
                     break;
                 case Keys.N:
-                    gs.Location = new Point(f.Location.X, f.Location.Y);
+                    SinglePlayerScreen sps = new SinglePlayerScreen();
+                    sps.Location = new Point(f.Location.X, f.Location.Y);
                     f.Controls.Remove(this);
-                    gs.Size = f.Size;
-                    f.Controls.Add(gs);
-                    gs.Focus();
+                    sps.Size = f.Size;
+                    f.Controls.Add(sps);
+                    sps.Focus();
                     break;
                 case Keys.B:
                     HighScoreScreen hs = new HighScoreScreen();
@@ -53,6 +53,7 @@ namespace Deop.io
                     ins.Focus();
                     break;
                 case Keys.Space:
+                    GameScreen gs = new GameScreen();
                     gs.Location = new Point(f.Location.X, f.Location.Y);
                     f.Controls.Remove(this);
                     gs.Size = f.Size;

@@ -8,17 +8,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-
 namespace Deop.io
 {
-    public partial class GameScreen : UserControl
+    public partial class SinglePlayerScreen : UserControl
     {
-        //Movement booleans for p1 and p2
         Boolean leftArrowDown, rightArrowDown, upArrowDown, downArrowDown;
-        Boolean wArrowDown, aArrowDown, sArrowDown, dArrowDown;
         Boolean nDown, bDown, mDown, spaceDown;
-        Boolean cDown, vDown, xDown, zDown;
-        int p1CoolDown, p2CoolDown;
+
+        int p1CoolDown, p2CoolDown, p3CoolDown, p4CoolDown;
         int squareX, squareY;
         int hexagonX, hexagonY;
         int triangleX, triangleY;
@@ -42,17 +39,16 @@ namespace Deop.io
         int baseBulletSpeed = 6;
         int baseReload = 25;
         int baseRegen = 5;
-        
-
-        int attribute1, attribute2;
-
-        int keyCoolDown1, keyCoolDown2;
 
 
-        int lvlUpgrade, lvl1Upgrade, lvl2Upgrade;
+        int attribute;
+
+        int keyCoolDown;
+
+
+        int lvlUpgrade
+            ;
         Point d1, d2, d3, d4, d5, d6;
-
-        int d1x, d1y, d2x, d2y, d1t, d2t;
 
         public SolidBrush blueBrush = new SolidBrush(Color.DeepSkyBlue);
         public SolidBrush redBrush = new SolidBrush(Color.Red);
@@ -67,32 +63,35 @@ namespace Deop.io
         List<Hexagon> deadHexagonList = new List<Hexagon>();
         List<Triangle> deadTriangleList = new List<Triangle>();
         List<Bullet> deadBulletList = new List<Bullet>();
-        Bot p1, p2;
+        Bot p1, p2, p3, p4;
         Rectangle newSquare;
         Rectangle r;
 
-        Boolean boost1, boost2;
+        Boolean boost;
+
 
         //random number generator
         Random randGen = new Random();
-        public GameScreen()
+        public SinglePlayerScreen()
         {
             InitializeComponent();
             OnStart();
         }
         public void OnStart()
         {
-            boost1 = boost2 = false;
-            keyCoolDown1 = keyCoolDown2 = attribute1 = attribute2 = 0;
+            boost = false;
+            keyCoolDown = attribute = 0;
             healthRegenCounter = 0;
-            p1 = new Bot(blueBrush, 1, 50, 430, 40, baseMaxHealth, baseDamage, baseSpeed, "none", baseBulletHealth, baseBulletDamage, baseBulletSpeed, baseReload, baseRegen, baseMaxHealth, 1, 0, 0);
+            p1 = new Bot(blueBrush, 1, 40, 40, 40, baseMaxHealth, baseDamage, baseSpeed, "none", baseBulletHealth, baseBulletDamage, baseBulletSpeed, baseReload, baseRegen, baseMaxHealth, 1, 0, 0);
             botList.Add(p1);
-            p2 = new Bot(redBrush, 2, 1510, 430, 40, baseMaxHealth, baseDamage, baseSpeed, "none", baseBulletHealth, baseBulletDamage, baseBulletSpeed, baseReload, baseRegen, baseMaxHealth, 1, 0, 0);
+            p2 = new Bot(redBrush, 2, 1520, 40, 40, baseMaxHealth, baseDamage, baseSpeed, "none", baseBulletHealth, baseBulletDamage, baseBulletSpeed, baseReload, baseRegen, baseMaxHealth, 1, 0, 0);
             botList.Add(p2);
+            p3 = new Bot(redBrush, 3, 40, 820, 40, baseMaxHealth, baseDamage, baseSpeed, "none", baseBulletHealth, baseBulletDamage, baseBulletSpeed, baseReload, baseRegen, baseMaxHealth, 1, 0, 0);
+            botList.Add(p3);
+            p4 = new Bot(redBrush, 4, 1520, 820, 40, baseMaxHealth, baseDamage, baseSpeed, "none", baseBulletHealth, baseBulletDamage, baseBulletSpeed, baseReload, baseRegen, baseMaxHealth, 1, 0, 0);
+            botList.Add(p4);
             p1CoolDown = p1.reload;
             p2CoolDown = p2.reload;
-            Square g = new Square(650, 300, 300, 2500, 30);
-            squareList.Add(g);
 
             squareGenerationSpeed = 300;
             for (int i = 0; i <= 20; i++)
@@ -104,7 +103,7 @@ namespace Deop.io
 
                 foreach (Square s in squareList)
                 {
-                    r = new Rectangle(s.x -1, s.y - 1, s.size+1, s.size+1);
+                    r = new Rectangle(s.x - 1, s.y - 1, s.size + 1, s.size + 1);
                     if (r.IntersectsWith(newSquare))
                     {
                         addShape = false;
@@ -126,7 +125,7 @@ namespace Deop.io
 
                 foreach (Square s in squareList)
                 {
-                    r = new Rectangle(s.x -1 , s.y -1, s.size +1, s.size+1);
+                    r = new Rectangle(s.x - 1, s.y - 1, s.size + 1, s.size + 1);
                     if (r.IntersectsWith(newSquare))
                     {
                         addShape = false;
@@ -135,7 +134,7 @@ namespace Deop.io
 
                 foreach (Hexagon h in hexagonList)
                 {
-                    r = new Rectangle(h.x-1, h.y-1, h.size+1, h.size+1);
+                    r = new Rectangle(h.x - 1, h.y - 1, h.size + 1, h.size + 1);
                     if (r.IntersectsWith(newSquare))
                     {
                         addShape = false;
@@ -148,7 +147,6 @@ namespace Deop.io
                 }
             }
         }
-
         private void GameScreen_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             //if key is pressed boolean is true
@@ -166,18 +164,6 @@ namespace Deop.io
                 case Keys.Down:
                     downArrowDown = true;
                     break;
-                case Keys.W:
-                    wArrowDown = true;
-                    break;
-                case Keys.D:
-                    dArrowDown = true;
-                    break;
-                case Keys.A:
-                    aArrowDown = true;
-                    break;
-                case Keys.S:
-                    sArrowDown = true;
-                    break;
                 case Keys.N:
                     nDown = true;
                     break;
@@ -189,18 +175,6 @@ namespace Deop.io
                     break;
                 case Keys.Space:
                     spaceDown = true;
-                    break;
-                case Keys.X:
-                    xDown = true;
-                    break;
-                case Keys.C:
-                    cDown = true;
-                    break;
-                case Keys.Z:
-                    zDown = true;
-                    break;
-                case Keys.V:
-                    vDown = true;
                     break;
                 case Keys.Escape:
                     MainScreen ms = new MainScreen();
@@ -231,18 +205,6 @@ namespace Deop.io
                 case Keys.Down:
                     downArrowDown = false;
                     break;
-                case Keys.W:
-                    wArrowDown = false;
-                    break;
-                case Keys.D:
-                    dArrowDown = false;
-                    break;
-                case Keys.A:
-                    aArrowDown = false;
-                    break;
-                case Keys.S:
-                    sArrowDown = false;
-                    break;
                 case Keys.N:
                     nDown = false;
                     break;
@@ -255,57 +217,13 @@ namespace Deop.io
                 case Keys.Space:
                     spaceDown = false;
                     break;
-                case Keys.X:
-                    xDown = false;
-                    break;
-                case Keys.C:
-                    cDown = false;
-                    break;
-                case Keys.Z:
-                    zDown = false;
-                    break;
-                case Keys.V:
-                    vDown = false;
-                    break;
             }
         }
-
         private void gameLoop_Tick(object sender, EventArgs e)
         {
-            if (p1.xp >= 8000)
-            {
-                gameLoop.Enabled = false;
-                MainScreen ms = new MainScreen();
-                Form f = this.FindForm();
-                ms.Location = new Point((f.Width - ms.Width) / 2, (f.Height - ms.Height) / 2);
-                f.Controls.Remove(this);
-                ms.Size = f.Size;
-                f.Controls.Add(ms);
-                ms.Focus();
-                ms.Winner(1);
-
-            }
-            if (p2.xp >= 8000)
-            {
-                gameLoop.Enabled = false;
-                MainScreen ms = new MainScreen();
-                Form f = this.FindForm();
-                ms.Location = new Point((f.Width - ms.Width) / 2, (f.Height - ms.Height) / 2);
-                f.Controls.Remove(this);
-                ms.Size = f.Size;
-                f.Controls.Add(ms);
-                ms.Focus();
-                ms.Winner(2);
-
-            }
-
             if (p1.boost != p1.lvl)
             {
-                boost1 = true;
-            }
-            if (p2.boost != p2.lvl)
-            {
-                boost2 = true;
+                boost = true;
             }
             addShape = true;
             if (randGen.Next(1, squareGenerationSpeed) < 7)
@@ -372,7 +290,7 @@ namespace Deop.io
                     }
                 }
             }
-            else if (randGen.Next(1, squareGenerationSpeed) == 12)
+            else if (randGen.Next(1, squareGenerationSpeed) < 12)
             {
                 triangleX = randGen.Next(1, this.Width - triangleSize - 1);
                 triangleY = randGen.Next(1, this.Height - triangleSize - 1);
@@ -401,9 +319,10 @@ namespace Deop.io
                     triangleList.Add(t);
                 }
             }
-          
-            
             p1.Collision(p2);
+            p1.Collision(p3);
+            p1.Collision(p4);
+
             foreach (Bullet b in bulletList)
             {
                 b.Move(b.direction);
@@ -419,13 +338,24 @@ namespace Deop.io
                 {
                     b.TriangleCollision(t);
                 }
-                if (b.shooter == 2)
+                if (b.shooter != 1)
                 {
-                    p2.xp += b.Collision(p1);
+                    b.Collision(p1);
                 }
                 else
                 {
-                    p1.xp += b.Collision(p2);
+                    if (b.Collision(p2) != 0)
+                    {
+                        p1.xp += 50 * p2.lvl;
+                    }
+                    if (b.Collision(p3) != 0)
+                    {
+                        p1.xp += 50 * p3.lvl;
+                    }
+                    if (b.Collision(p4) != 0)
+                    {
+                        p1.xp += 50 * p4.lvl;
+                    }
                 }
                 if (b.hp <= 0 || b.x < 0 || b.x > this.Width - b.size || b.y < 0 || b.y > this.Height - b.size)
                 {
@@ -459,24 +389,21 @@ namespace Deop.io
                 }
                 else
                 {
-                    if (aArrowDown)
-                    {
-                        p.Move("left", this);
-                    }
-
-                    if (dArrowDown)
-                    {
-                        p.Move("right", this);
-                    }
-
-                    if (wArrowDown)
+                    if (p.y > p1.y + 10)
                     {
                         p.Move("up", this);
                     }
-
-                    if (sArrowDown)
+                    else if (p.y < p1.y - 10)
                     {
                         p.Move("down", this);
+                    }
+                    else if (p.x > p1.x + 10)
+                    {
+                        p.Move("left", this);
+                    }
+                    else 
+                    {
+                        p.Move("right", this);
                     }
                 }
                 foreach (Square s in squareList)
@@ -491,137 +418,119 @@ namespace Deop.io
                 {
                     p.TriangleCollision(t);
                 }
-                if (p.xp >= 7500)
-                {
-                    p.lvl = 20;
-                }
-                else if (p.xp >= 6500)
-                {
-                    lvlUpgrade = 7500 - p.xp;
-                    p.lvl = 19;
-                }
-                else if (p.xp >= 5550)
-                {
-                    lvlUpgrade = 6500 - p.xp;
-                    p.lvl = 18;
-                }
-                else if (p.xp >= 4650)
-                {
-                    lvlUpgrade = 5550 - p.xp;
-                    p.lvl = 17;
-                }
-                else if (p.xp >= 3800)
-                {
-                    lvlUpgrade = 4650 - p.xp;
-                    p.lvl = 16;
-                }
-                else if (p.xp >= 3000)
-                {
-                    lvlUpgrade = 3800 - p.xp;
-                    p.lvl = 15;
-                }
-                else if (p.xp >= 2250)
-                {
-                    lvlUpgrade = 3000 - p.xp;
-                    p.lvl = 14;
-                }
-                else if (p.xp >= 1700)
-                {
-                    lvlUpgrade = 2250 - p.xp;
-                    p.lvl = 13;
-                }
-                else if (p.xp >= 1300)
-                {
-                    lvlUpgrade = 1700 - p.xp;
-                    p.lvl = 12;
-                }
-                else if (p.xp >= 1000)
-                {
-                    lvlUpgrade = 1300 - p.xp;
-                    p.lvl = 11;
-                }
-                else if (p.xp >= 750)
-                {
-                    lvlUpgrade = 1000 - p.xp;
-                    p.lvl = 10;
-                }
-                else if (p.xp >= 550)
-                {
-                    lvlUpgrade = 750 - p.xp;
-                    p.lvl = 9;
-                }
-                else if (p.xp >= 400)
-                {
-                    lvlUpgrade = 550 - p.xp;
-                    p.lvl = 8;
-                }
-                else if (p.xp >= 280)
-                {
-                    lvlUpgrade = 400 - p.xp;
-                    p.lvl = 7;
-                }
-                else if (p.xp >= 180)
-                {
-                    lvlUpgrade = 280 - p.xp;
-                    p.lvl = 6;
-                }
-                else if (p.xp >= 110)
-                {
-                    lvlUpgrade = 180 - p.xp;
-                    p.lvl = 5;
-                }
-                else if (p.xp >= 60)
-                {
-                    lvlUpgrade = 110 - p.xp;
-                    p.lvl = 4;
-                }
-                else if (p.xp >= 30)
-                {
-                    lvlUpgrade = 60 - p.xp;
-                    p.lvl = 3;
-                }
-                else if (p.xp >= 10)
-                {
-                    lvlUpgrade = 30 - p.xp;
-                    p.lvl = 2;
-                }
-                else
-                {
-                    lvlUpgrade = 10 - p.xp;
-                    p.lvl = 1;
-                }
-                if (p.playerNumber == 1)
-                {
-                    lvl1Upgrade = lvlUpgrade;
-                }
-                else
-                {
-                    lvl2Upgrade = lvlUpgrade;
-                }
             }
-
-
-
+            if (p1.xp >= 7500)
+            {
+                p1.lvl = 20;
+            }
+            else if (p1.xp >= 6500)
+            {
+                lvlUpgrade = 7500 - p1.xp;
+                p1.lvl = 19;
+            }
+            else if (p1.xp >= 5550)
+            {
+                lvlUpgrade = 6500 - p1.xp;
+                p1.lvl = 18;
+            }
+            else if (p1.xp >= 4650)
+            {
+                lvlUpgrade = 5550 - p1.xp;
+                p1.lvl = 17;
+            }
+            else if (p1.xp >= 3800)
+            {
+                lvlUpgrade = 4650 - p1.xp;
+                p1.lvl = 16;
+            }
+            else if (p1.xp >= 3000)
+            {
+                lvlUpgrade = 3800 - p1.xp;
+                p1.lvl = 15;
+            }
+            else if (p1.xp >= 2250)
+            {
+                lvlUpgrade = 3000 - p1.xp;
+                p1.lvl = 14;
+            }
+            else if (p1.xp >= 1700)
+            {
+                lvlUpgrade = 2250 - p1.xp;
+                p1.lvl = 13;
+            }
+            else if (p1.xp >= 1300)
+            {
+                lvlUpgrade = 1700 - p1.xp;
+                p1.lvl = 12;
+            }
+            else if (p1.xp >= 1000)
+            {
+                lvlUpgrade = 1300 - p1.xp;
+                p1.lvl = 11;
+            }
+            else if (p1.xp >= 750)
+            {
+                lvlUpgrade = 1000 - p1.xp;
+                p1.lvl = 10;
+            }
+            else if (p1.xp >= 550)
+            {
+                lvlUpgrade = 750 - p1.xp;
+                p1.lvl = 9;
+            }
+            else if (p1.xp >= 400)
+            {
+                lvlUpgrade = 550 - p1.xp;
+                p1.lvl = 8;
+            }
+            else if (p1.xp >= 280)
+            {
+                lvlUpgrade = 400 - p1.xp;
+                p1.lvl = 7;
+            }
+            else if (p1.xp >= 180)
+            {
+                lvlUpgrade = 280 - p1.xp;
+                p1.lvl = 6;
+            }
+            else if (p1.xp >= 110)
+            {
+                lvlUpgrade = 180 - p1.xp;
+                p1.lvl = 5;
+            }
+            else if (p1.xp >= 60)
+            {
+                lvlUpgrade = 110 - p1.xp;
+                p1.lvl = 4;
+            }
+            else if (p1.xp >= 30)
+            {
+                lvlUpgrade = 60 - p1.xp;
+                p1.lvl = 3;
+            }
+            else if (p1.xp >= 10)
+            {
+                lvlUpgrade = 30 - p1.xp;
+                p1.lvl = 2;
+            }
+            else
+            {
+                lvlUpgrade = 10 - p1.xp;
+                p1.lvl = 1;
+            }
 
             foreach (Triangle t in triangleList)
             {
-                d1x = (t.x - p1.x);
-                d1y = (t.y - p1.y);
-                d1t = Math.Abs(d1x) + Math.Abs(d1y);
-                d2x = (t.x - p2.x);
-                d2y = (t.y - p2.y);
-                d2t = Math.Abs(d2x) + Math.Abs(d2y);
-                if (d2t > d1t)
-                {
-                    if (d1x > 20)
+                
+                    if (t.x > p1.x + 10)
                     {
                         t.Move("left");
                     }
-                    else if (d1x < 0)
+                    else if (t.x < p1.x - 10)
                     {
                         t.Move("right");
                     }
-                    else if (d1y > 10)
+                    else if (t.y > p1.y + 10)
                     {
                         t.Move("up");
                     }
@@ -629,26 +538,7 @@ namespace Deop.io
                     {
                         t.Move("down");
                     }
-                }
-                else
-                {
-                    if (d2x > 20)
-                    {
-                        t.Move("left");
-                    }
-                    else if (d2x < 0)
-                    {
-                        t.Move("right");
-                    }
-                    else if (d2y > 10)
-                    {
-                        t.Move("up");
-                    }
-                    else
-                    {
-                        t.Move("down");
-                    }
-                }
+                
                 foreach (Square s in squareList)
                 {
                     t.SquareCollision(s);
@@ -663,6 +553,7 @@ namespace Deop.io
                     deadTriangleList.Add(t);
                 }
             }
+
             foreach (Square s in squareList)
             {
                 if (s.hp <= 0)
@@ -694,74 +585,130 @@ namespace Deop.io
                 bulletList.Remove(b);
             }
 
-            if (spaceDown == true)
-            {
-                if (p1CoolDown <= 0)
-                {
-                    p1CoolDown = p1.reload;
-                    if (p1.direction == "left")
-                    {
-                        Bullet b = new Bullet(p1.x - 15, p1.y + 10, 20, p1.bulletHealth, p1.bulletDamage, p1.bulletSpeed, p1.direction, p1.playerNumber);
-                        bulletList.Add(b);
-                    }
-                    else if (p1.direction == "right")
-                    {
-                        Bullet b = new Bullet(p1.x + p1.size - 5, p1.y + 10, 20, p1.bulletHealth, p1.bulletDamage, p1.bulletSpeed, p1.direction, p1.playerNumber);
-                        bulletList.Add(b);
-                    }
-                    else if (p1.direction == "down")
-                    {
-                        Bullet b = new Bullet(p1.x + 10, p1.y + p1.size - 5, 20, p1.bulletHealth, p1.bulletDamage, p1.bulletSpeed, p1.direction, p1.playerNumber);
-                        bulletList.Add(b);
-                    }
-                    else if (p1.direction == "up")
-                    {
-                        Bullet b = new Bullet(p1.x + 10, p1.y - 15, 20, p1.bulletHealth, p1.bulletDamage, p1.bulletSpeed, p1.direction, p1.playerNumber);
-                        bulletList.Add(b);
-                    }
-                }
-            }
-            if (zDown == true)
-            {
-                if (p2CoolDown <= 0)
-                {
-                    p2CoolDown = p2.reload;
-                    if (p2.direction == "left")
-                    {
-                        Bullet b = new Bullet(p2.x - 15, p2.y + 10, 20, p2.bulletHealth, p2.bulletDamage, p2.bulletSpeed, p2.direction, p2.playerNumber);
-                        bulletList.Add(b);
-                    }
-                    else if (p2.direction == "right")
-                    {
-                        Bullet b = new Bullet(p2.x + p2.size - 5, p2.y + 10, 20, p2.bulletHealth, p2.bulletDamage, p2.bulletSpeed, p2.direction, p2.playerNumber);
-                        bulletList.Add(b);
-                    }
-                    else if (p2.direction == "down")
-                    {
-                        Bullet b = new Bullet(p2.x + 10, p2.y + p2.size - 5, 20, p2.bulletHealth, p2.bulletDamage, p2.bulletSpeed, p2.direction, p2.playerNumber);
-                        bulletList.Add(b);
-                    }
-                    else if (p2.direction == "up")
-                    {
-                        Bullet b = new Bullet(p2.x + 10, p2.y - 15, 20, p2.bulletHealth, p2.bulletDamage, p2.bulletSpeed, p2.direction, p2.playerNumber);
-                        bulletList.Add(b);
-                    }
-                }
-
-            }
             
-          
-            if (p1.hp <=0)
+                    if (spaceDown == true)
+                    {
+                        if (p1CoolDown <= 0)
+                        {
+                            p1CoolDown = p1.reload;
+                            if (p1.direction == "left")
+                            {
+                                Bullet b = new Bullet(p1.x - 15, p1.y + 10, 20, p1.bulletHealth, p1.bulletDamage, p1.bulletSpeed, p1.direction, p1.playerNumber);
+                                bulletList.Add(b);
+                            }
+                            else if (p1.direction == "right")
+                            {
+                                Bullet b = new Bullet(p1.x + p1.size - 5, p1.y + 10, 20, p1.bulletHealth, p1.bulletDamage, p1.bulletSpeed, p1.direction, p1.playerNumber);
+                                bulletList.Add(b);
+                            }
+                            else if (p1.direction == "down")
+                            {
+                                Bullet b = new Bullet(p1.x + 10, p1.y + p1.size - 5, 20, p1.bulletHealth, p1.bulletDamage, p1.bulletSpeed, p1.direction, p1.playerNumber);
+                                bulletList.Add(b);
+                            }
+                            else if (p1.direction == "up")
+                            {
+                                Bullet b = new Bullet(p1.x + 10, p1.y - 15, 20, p1.bulletHealth, p1.bulletDamage, p1.bulletSpeed, p1.direction, p1.playerNumber);
+                                bulletList.Add(b);
+                            }
+                        }
+                    }
+            if (p2CoolDown <= 0)
             {
-                p1.Respawn();
-                healthLabel.ForeColor = healthRegenLabel.ForeColor = bodyDamageLabel.ForeColor = bulletSpeedLabel.ForeColor = bulletHealthLabel.ForeColor = bulletDamageLabel.ForeColor = reloadLabel.ForeColor = speedLabel.ForeColor = Color.White;
+                p2CoolDown = p2.reload;
+                if (p2.direction == "left")
+                {
+                    Bullet b = new Bullet(p2.x - 15, p2.y + 10, 20, p2.bulletHealth, p2.bulletDamage, p2.bulletSpeed, p2.direction, p2.playerNumber);
+                    bulletList.Add(b);
+                }
+                else if (p2.direction == "right")
+                {
+                    Bullet b = new Bullet(p2.x + p2.size - 5, p2.y + 10, 20, p2.bulletHealth, p2.bulletDamage, p2.bulletSpeed, p2.direction, p2.playerNumber);
+                    bulletList.Add(b);
+                }
+                else if (p2.direction == "down")
+                {
+                    Bullet b = new Bullet(p2.x + 10, p2.y + p2.size - 5, 20, p2.bulletHealth, p2.bulletDamage, p2.bulletSpeed, p2.direction, p2.playerNumber);
+                    bulletList.Add(b);
+                }
+                else if (p2.direction == "up")
+                {
+                    Bullet b = new Bullet(p2.x + 10, p2.y - 15, 20, p2.bulletHealth, p2.bulletDamage, p2.bulletSpeed, p2.direction, p2.playerNumber);
+                    bulletList.Add(b);
+                }
+            }
+            if (p3CoolDown <= 0)
+            {
+                p3CoolDown = p3.reload;
+                if (p3.direction == "left")
+                {
+                    Bullet b = new Bullet(p3.x - 15, p3.y + 10, 20, p3.bulletHealth, p3.bulletDamage, p3.bulletSpeed, p3.direction, p3.playerNumber);
+                    bulletList.Add(b);
+                }
+                else if (p3.direction == "right")
+                {
+                    Bullet b = new Bullet(p3.x + p3.size - 5, p3.y + 10, 20, p3.bulletHealth, p3.bulletDamage, p3.bulletSpeed, p3.direction, p3.playerNumber);
+                    bulletList.Add(b);
+                }
+                else if (p3.direction == "down")
+                {
+                    Bullet b = new Bullet(p3.x + 10, p3.y + p3.size - 5, 20, p3.bulletHealth, p3.bulletDamage, p3.bulletSpeed, p3.direction, p3.playerNumber);
+                    bulletList.Add(b);
+                }
+                else if (p3.direction == "up")
+                {
+                    Bullet b = new Bullet(p3.x + 10, p3.y - 15, 20, p3.bulletHealth, p3.bulletDamage, p3.bulletSpeed, p3.direction, p3.playerNumber);
+                    bulletList.Add(b);
+                }
+            }
+            if (p4CoolDown <= 0)
+            {
+                p4CoolDown = p4.reload;
+                if (p4.direction == "left")
+                {
+                    Bullet b = new Bullet(p4.x - 15, p4.y + 10, 20, p4.bulletHealth, p4.bulletDamage, p4.bulletSpeed, p4.direction, p4.playerNumber);
+                    bulletList.Add(b);
+                }
+                else if (p4.direction == "right")
+                {
+                    Bullet b = new Bullet(p4.x + p4.size - 5, p4.y + 10, 20, p4.bulletHealth, p4.bulletDamage, p4.bulletSpeed, p4.direction, p4.playerNumber);
+                    bulletList.Add(b);
+                }
+                else if (p1.direction == "down")
+                {
+                    Bullet b = new Bullet(p4.x + 10, p4.y + p4.size - 5, 20, p4.bulletHealth, p4.bulletDamage, p4.bulletSpeed, p4.direction, p4.playerNumber);
+                    bulletList.Add(b);
+                }
+                else if (p4.direction == "up")
+                {
+                    Bullet b = new Bullet(p4.x + 10, p4.y - 15, 20, p4.bulletHealth, p4.bulletDamage, p4.bulletSpeed, p4.direction, p4.playerNumber);
+                    bulletList.Add(b);
+                }
+            }
+
+            if (p1.hp <= 0)
+            {
+                //game over sequence
             }
             if (p2.hp <= 0)
             {
-                p2.Respawn();
-                healthTwoLabel.ForeColor = healthRegenTwoLabel.ForeColor = bodyDamageTwoLabel.ForeColor = bulletSpeedTwoLabel.ForeColor = bulletHealthTwoLabel.ForeColor = bulletDamageTwoLabel.ForeColor = reloadTwoLabel.ForeColor = speedTwoLabel.ForeColor = Color.White;
+                p2.BotRespawn();
+                p2.x = 1520;
+                p2.y = 40;
             }
-           
+            if (p3.hp <= 0)
+            {
+                p3.x = 40;
+                p3.y = 820;
+                p3.BotRespawn();
+            }
+            if (p4.hp <= 0)
+            {
+                p4.x = 1520;
+                p4.y = 820;
+                p4.BotRespawn();
+            }
+
             if (healthRegenCounter == 100)
             {
                 foreach (Bot p in botList)
@@ -780,29 +727,20 @@ namespace Deop.io
                 }
                 healthRegenCounter = 0;
             }
-            
+
             health1Label.Text = Convert.ToString(p1.hp) + " hp";
-            health2Label.Text = Convert.ToString(p2.hp) + " hp";
             level1Label.Text = "lvl " + Convert.ToString(p1.lvl);
-            level2Label.Text = "lvl " + Convert.ToString(p2.lvl);
 
             if (p1.lvl != 20)
             {
-                xp1Label.Text = Convert.ToString(lvl1Upgrade) + " xp to lvl " + Convert.ToString(p1.lvl + 1);
+                xp1Label.Text = Convert.ToString(lvlUpgrade) + " xp to lvl " + Convert.ToString(p1.lvl + 1);
             }
             else
             {
                 xp1Label.Text = "Max Level: " + Convert.ToString(p1.xp) + " xp";
             }
-            if (p2.lvl != 20)
-            {
-                xp2Label.Text = Convert.ToString(lvl2Upgrade) + " xp to lvl " + Convert.ToString(p2.lvl + 1);
-            }
-            else
-            {
-                xp2Label.Text = "Max Level: " + Convert.ToString(p1.xp) + " xp";
-            }
-            if (boost1 == true)
+
+            if (boost == true)
             {
                 healthLabel.Visible = true;
                 healthRegenLabel.Visible = true;
@@ -812,31 +750,31 @@ namespace Deop.io
                 bulletDamageLabel.Visible = true;
                 reloadLabel.Visible = true;
                 speedLabel.Visible = true;
-                if (keyCoolDown1 < 0)
+                if (keyCoolDown < 0)
                 {
                     if (mDown == true)
                     {
-                        if (attribute1 < 7)
+                        if (attribute < 7)
                         {
-                            attribute1++;
-                            keyCoolDown1 = 5;
-                            Bold1Label();
+                            attribute++;
+                            keyCoolDown = 5;
+                            BoldLabel();
                         }
                     }
                     if (bDown == true)
                     {
-                        if (attribute1 > 0)
+                        if (attribute > 0)
                         {
-                            attribute1--;
-                            keyCoolDown1 = 5;
-                            Bold1Label();
+                            attribute--;
+                            keyCoolDown = 5;
+                            BoldLabel();
                         }
                     }
                     if (nDown == true)
                     {
-                        keyCoolDown1 = 5;
-                        LevelUp(p1, attribute1);
-                        boost1 = false;
+                        keyCoolDown = 5;
+                        LevelUp();
+                        boost = false;
                         healthLabel.Visible = false;
                         healthRegenLabel.Visible = false;
                         bodyDamageLabel.Visible = false;
@@ -848,62 +786,12 @@ namespace Deop.io
                     }
                 }
             }
-            if (boost2 == true)
-            {
-                healthTwoLabel.Visible = true;
-                healthRegenTwoLabel.Visible = true;
-                bodyDamageTwoLabel.Visible = true;
-                bulletSpeedTwoLabel.Visible = true;
-                bulletHealthTwoLabel.Visible = true;
-                bulletDamageTwoLabel.Visible = true;
-                reloadTwoLabel.Visible = true;
-                speedTwoLabel.Visible = true;
-                if (keyCoolDown2 < 0)
-                {
-                    if (xDown == true)
-                    {
-                        if (attribute2 < 7)
-                        {
-                            attribute2++;
-                            keyCoolDown2 = 5;
-                            Bold2Label();
-                        }
-                    }
-                    if (cDown == true)
-                    {
-                        if (attribute2 > 0)
-                        {
-                            attribute2--;
-                            keyCoolDown2 = 5;
-                            Bold2Label();
-                        }
-                    }
-                    if (vDown == true)
-                    {
-                        keyCoolDown2 = 5;
-                        LevelUp(p2, attribute2);
-                        boost2 = false;
-                        healthTwoLabel.Visible = false;
-                        healthRegenTwoLabel.Visible = false;
-                        bodyDamageTwoLabel.Visible = false;
-                        bulletSpeedTwoLabel.Visible = false;
-                        bulletHealthTwoLabel.Visible = false;
-                        bulletDamageTwoLabel.Visible = false;
-                        reloadTwoLabel.Visible = false;
-                        speedTwoLabel.Visible = false;
-                    }
-
-                }
-            }
-                
-            
-            
-
 
             p1CoolDown--;
             p2CoolDown--;
-            keyCoolDown1--;
-            keyCoolDown2--;
+            p3CoolDown--;
+            p4CoolDown--;
+            keyCoolDown--;
 
             deadSquareList.Clear();
             deadTriangleList.Clear();
@@ -911,11 +799,9 @@ namespace Deop.io
             deadBulletList.Clear();
 
             healthRegenCounter++;
-
             Refresh();
         }
-
-        public void GameScreen_Paint(object sender, PaintEventArgs e)
+            public void GameScreen_Paint(object sender, PaintEventArgs e)
         {
             //draw food, mines, and powerups
             foreach (Square s in squareList)
@@ -941,7 +827,6 @@ namespace Deop.io
             }
             foreach (Bot b in botList)
             {
-
                 if (b.direction == "right")
                 {
                     e.Graphics.FillRectangle(greyBrush, b.x + b.size - 5, b.y + 10, 20, 20);
@@ -991,9 +876,8 @@ namespace Deop.io
                 Point[] pointArray = { d1, d2, d3 };
                 e.Graphics.FillPolygon(t.triangleBrush, pointArray);
             }
-            
         }
-        private void Bold1Label()
+        private void BoldLabel()
         {
             healthLabel.Font = new Font(this.Font, FontStyle.Regular);
             healthRegenLabel.Font = new Font(this.Font, FontStyle.Regular);
@@ -1004,96 +888,51 @@ namespace Deop.io
             reloadLabel.Font = new Font(this.Font, FontStyle.Regular);
             speedLabel.Font = new Font(this.Font, FontStyle.Regular);
 
-            if (attribute1 == 0)
+            if (attribute == 0)
             {
                 healthLabel.Font = new Font(this.Font, FontStyle.Bold);
             }
-            else if (attribute1 == 1)
+            else if (attribute == 1)
             {
                 healthRegenLabel.Font = new Font(this.Font, FontStyle.Bold);
             }
-            else if (attribute1 == 2)
+            else if (attribute == 2)
             {
-                bodyDamageLabel.Font = new Font(this.Font, FontStyle.Bold); 
+                bodyDamageLabel.Font = new Font(this.Font, FontStyle.Bold);
             }
-            else if (attribute1 == 3)
+            else if (attribute == 3)
             {
                 bulletSpeedLabel.Font = new Font(this.Font, FontStyle.Bold);
             }
-            else if (attribute1 == 4)
+            else if (attribute == 4)
             {
                 bulletHealthLabel.Font = new Font(this.Font, FontStyle.Bold);
             }
-            else if (attribute1 == 5)
+            else if (attribute == 5)
             {
                 bulletDamageLabel.Font = new Font(this.Font, FontStyle.Bold);
             }
-            else if (attribute1 == 6)
+            else if (attribute == 6)
             {
                 reloadLabel.Font = new Font(this.Font, FontStyle.Bold);
             }
-            else if (attribute1 == 7)
+            else if (attribute == 7)
             {
                 speedLabel.Font = new Font(this.Font, FontStyle.Bold);
             }
         }
 
-        private void Bold2Label()
-        {
-            healthTwoLabel.Font = new Font(this.Font, FontStyle.Regular);
-            healthRegenTwoLabel.Font = new Font(this.Font, FontStyle.Regular);
-            bodyDamageTwoLabel.Font = new Font(this.Font, FontStyle.Regular);
-            bulletSpeedTwoLabel.Font = new Font(this.Font, FontStyle.Regular);
-            bulletHealthTwoLabel.Font = new Font(this.Font, FontStyle.Regular);
-            bulletDamageTwoLabel.Font = new Font(this.Font, FontStyle.Regular);
-            reloadTwoLabel.Font = new Font(this.Font, FontStyle.Regular);
-            speedTwoLabel.Font = new Font(this.Font, FontStyle.Regular);
 
-            if (attribute2 == 0)
-            {
-                healthTwoLabel.Font = new Font(this.Font, FontStyle.Bold);
-            }
-            else if (attribute2 == 1)
-            {
-                healthRegenTwoLabel.Font = new Font(this.Font, FontStyle.Bold);
-            }
-            else if (attribute2 == 2)
-            {
-                bodyDamageTwoLabel.Font = new Font(this.Font, FontStyle.Bold);
-            }
-            else if (attribute2 == 3)
-            {
-                bulletSpeedTwoLabel.Font = new Font(this.Font, FontStyle.Bold);
-            }
-            else if (attribute2 == 4)
-            {
-                bulletHealthTwoLabel.Font = new Font(this.Font, FontStyle.Bold);
-            }
-            else if (attribute2 == 5)
-            {
-                bulletDamageTwoLabel.Font = new Font(this.Font, FontStyle.Bold);
-            }
-            else if (attribute2 == 6)
-            {
-                reloadTwoLabel.Font = new Font(this.Font, FontStyle.Bold);
-            }
-            else if (attribute2 == 7)
-            {
-                speedTwoLabel.Font = new Font(this.Font, FontStyle.Bold);
-            }
-        }
-        private void LevelUp(Bot p, int attribute)
+        private void LevelUp()
         {
-            if (p.playerNumber == 1)
-            {
                 if (attribute == 0)
                 {
                     if (healthLabel.ForeColor != Color.Red)
                     {
-                        p.hp += 50;
-                        p.maxHealth += 50;
-                        p.boost++;
-                        if (p.maxHealth > 375)
+                        p1.hp += 50;
+                        p1.maxHealth += 50;
+                        p1.boost++;
+                        if (p1.maxHealth > 375)
                         {
                             healthLabel.ForeColor = Color.Red;
                         }
@@ -1103,9 +942,9 @@ namespace Deop.io
                 {
                     if (healthRegenLabel.ForeColor != Color.Red)
                     {
-                        p.healthRegen += 4;
-                        p.boost++;
-                        if (p.healthRegen > 24)
+                        p1.healthRegen += 4;
+                        p1.boost++;
+                        if (p1.healthRegen > 24)
                         {
                             healthRegenLabel.ForeColor = Color.Red;
                         }
@@ -1115,9 +954,9 @@ namespace Deop.io
                 {
                     if (bodyDamageLabel.ForeColor != Color.Red)
                     {
-                        p.damage += 10;
-                        p.boost++;
-                        if (p.damage > 58)
+                        p1.damage += 10;
+                        p1.boost++;
+                        if (p1.damage > 58)
                         {
                             bodyDamageLabel.ForeColor = Color.Red;
                         }
@@ -1127,9 +966,9 @@ namespace Deop.io
                 {
                     if (bulletSpeedLabel.ForeColor != Color.Red)
                     {
-                        p.bulletSpeed += 8;
-                        p.boost++;
-                        if (p.bulletSpeed > 44)
+                        p1.bulletSpeed += 8;
+                        p1.boost++;
+                        if (p1.bulletSpeed > 44)
                         {
                             bulletSpeedLabel.ForeColor = Color.Red;
                         }
@@ -1140,9 +979,9 @@ namespace Deop.io
                 {
                     if (bulletHealthLabel.ForeColor != Color.Red)
                     {
-                        p.bulletHealth += 13;
-                        p.boost++;
-                        if (p.bulletHealth > 69)
+                        p1.bulletHealth += 13;
+                        p1.boost++;
+                        if (p1.bulletHealth > 69)
                         {
                             bulletHealthLabel.ForeColor = Color.Red;
                         }
@@ -1152,9 +991,9 @@ namespace Deop.io
                 {
                     if (bulletDamageLabel.ForeColor != Color.Red)
                     {
-                        p.bulletDamage += 17;
-                        p.boost++;
-                        if (p.bulletDamage > 93)
+                        p1.bulletDamage += 17;
+                        p1.boost++;
+                        if (p1.bulletDamage > 93)
                         {
                             bulletDamageLabel.ForeColor = Color.Red;
                         }
@@ -1164,9 +1003,9 @@ namespace Deop.io
                 {
                     if (reloadLabel.ForeColor != Color.Red)
                     {
-                        p.reload -= 4;
-                        p.boost++;
-                        if (p.reload < 6)
+                        p1.reload -= 4;
+                        p1.boost++;
+                        if (p1.reload < 6)
                         {
                             reloadLabel.ForeColor = Color.Red;
                         }
@@ -1176,115 +1015,17 @@ namespace Deop.io
                 {
                     if (speedLabel.ForeColor != Color.Red)
                     {
-                        p.speed += 2;
-                        p.boost++;
-                        if (p.speed > 13)
+                        p1.speed += 2;
+                        p1.boost++;
+                        if (p1.speed > 13)
                         {
                             speedLabel.ForeColor = Color.Red;
                         }
                     }
                 }
             }
-            else
-            {
-                if (attribute == 0)
-                {
-                    if (healthTwoLabel.ForeColor != Color.Red)
-                    {
-                        p.hp += 50;
-                        p.maxHealth += 50;
-                        p.boost++;
-                        if (p.maxHealth > 375)
-                        {
-                            healthTwoLabel.ForeColor = Color.Red;
-                        }
-                    }
-                }
-                else if (attribute == 1)
-                {
-                    if (healthRegenTwoLabel.ForeColor != Color.Red)
-                    {
-                        p.healthRegen += 4;
-                        p.boost++;
-                        if (p.healthRegen > 24)
-                        {
-                            healthRegenTwoLabel.ForeColor = Color.Red;
-                        }
-                    }
-                }
-                else if (attribute == 2)
-                {
-                    if (bodyDamageTwoLabel.ForeColor != Color.Red)
-                    {
-                        p.damage += 10;
-                        p.boost++;
-                        if (p.damage > 58)
-                        {
-                            bodyDamageTwoLabel.ForeColor = Color.Red;
-                        }
-                    }
-                }
-                else if (attribute == 3)
-                {
-                    if (bulletSpeedTwoLabel.ForeColor != Color.Red)
-                    {
-                        p.bulletSpeed += 8;
-                        p.boost++;
-                        if (p.bulletSpeed > 44)
-                        {
-                            bulletSpeedTwoLabel.ForeColor = Color.Red;
-                        }
-                    }
-                }
-                else if (attribute == 4)
-                {
-                    if (bulletHealthTwoLabel.ForeColor != Color.Red)
-                    {
-                        p.bulletHealth += 13;
-                        p.boost++;
-                        if (p.bulletHealth > 69)
-                        {
-                            bulletHealthTwoLabel.ForeColor = Color.Red;
-                        }
-                    }
-                }
-                else if (attribute == 5)
-                {
-                    if (bulletDamageTwoLabel.ForeColor != Color.Red)
-                    {
-                        p.bulletDamage += 17;
-                        p.boost++;
-                        if (p.bulletDamage > 93)
-                        {
-                            bulletDamageTwoLabel.ForeColor = Color.Red;
-                        }
-                    }
-                }
-                else if (attribute == 6)
-                {
-                    if (reloadTwoLabel.ForeColor != Color.Red)
-                    {
-                        p.reload -= 4;
-                        p.boost++;
-                        if (p.reload < 6)
-                        {
-                            reloadTwoLabel.ForeColor = Color.Red;
-                        }
-                    }
-                }
-                else
-                {
-                    if (speedTwoLabel.ForeColor != Color.Red)
-                    {
-                        p.speed += 2;
-                        p.boost++;
-                        if (p.speed > 13)
-                        {
-                            speedTwoLabel.ForeColor = Color.Red;
-                        }
-                    }
-                }
-            }
+
         }
     }
-}
+
+

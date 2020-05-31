@@ -28,44 +28,30 @@ namespace Deop.io
             direction = _direction;
 
         }
-        public void Move(string movement, GameScreen gs)
+        public void Move(string movement)
         {
             direction = movement;
             //move players at movement speed but not off screen
-            if (x > 0)
-            {
+            
                 if (direction == "left")
                 {
                     x = x - speed;
-
-
                 }
-            }
-
-            if (x < gs.Width - size)
-            {
+            
                 if (direction == "right")
                 {
                     x = x + speed;
                 }
-            }
-
-            if (y > 0)
-            {
+            
                 if (direction == "up")
                 {
                     y = y - speed;
                 }
-            }
-
-            if (y < gs.Height - size)
-            {
+            
                 if (direction == "down")
                 {
                     y = y + speed;
                 }
-            }
-
         }
         public void SquareCollision(Square s)
         {

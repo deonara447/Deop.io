@@ -29,7 +29,7 @@ namespace Deop.io
             direction = _direction;
             bulletBrush = new SolidBrush(Color.Black);
         }
-        public void Move(string movement, GameScreen gs)
+        public void Move(string movement)
         {
             direction = movement;
             //move players at movement speed but not off screen
