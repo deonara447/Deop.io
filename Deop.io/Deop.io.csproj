@@ -64,9 +64,11 @@
     <Compile Include="HighScore.cs" />
     <Compile Include="HighScoreScreen.cs">
       <SubType>UserControl</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
     <Compile Include="HighScoreScreen.Designer.cs">
       <DependentUpon>HighScoreScreen.cs</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
     <Compile Include="InstructionScreen.cs">
       <SubType>UserControl</SubType>
@@ -98,6 +100,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="HighScoreScreen.resx">
       <DependentUpon>HighScoreScreen.cs</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="InstructionScreen.resx">
       <DependentUpon>InstructionScreen.cs</DependentUpon>

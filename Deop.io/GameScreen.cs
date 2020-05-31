@@ -22,17 +22,8 @@ namespace Deop.io
         int squareX, squareY;
         int hexagonX, hexagonY;
         int triangleX, triangleY;
-        int squareSize = 30;
-        int triangleSize = 21;
-        int hexagonSize = 48;
         Boolean addShape;
         int squareGenerationSpeed;
-        int squareHp = 10;
-        int squareDamage = 10;
-        int hexagonHp = 100;
-        int hexagonDamage = 10;
-        int triangleHp = 20;
-        int triangleDamage = 20;
         int healthRegenCounter;
         int baseMaxHealth = 150;
         int baseDamage = 9;
@@ -98,9 +89,9 @@ namespace Deop.io
             for (int i = 0; i <= 20; i++)
             {
                 addShape = true;
-                squareX = randGen.Next(1, 1600 - squareSize - 1);
-                squareY = randGen.Next(1, 900 - squareSize - 1);
-                newSquare = new Rectangle(squareX, squareY, squareSize, squareSize);
+                squareX = randGen.Next(1, 1600 - 29);
+                squareY = randGen.Next(1, 900 - 29);
+                newSquare = new Rectangle(squareX, squareY, 30, 30);
 
                 foreach (Square s in squareList)
                 {
@@ -112,17 +103,17 @@ namespace Deop.io
                 }
                 if (addShape == true)
                 {
-                    Square f = new Square(squareX, squareY, squareSize, squareHp, squareDamage);
+                    Square f = new Square(squareX, squareY, 30, 10, 10);
                     squareList.Add(f);
                 }
             }
             addShape = true;
             for (int i = 0; i <= 5; i++)
             {
-                hexagonX = randGen.Next(1, 1600 - hexagonSize - 1);
-                hexagonY = randGen.Next(1, 900 - hexagonSize - 1);
+                hexagonX = randGen.Next(1, 1600 - 47);
+                hexagonY = randGen.Next(1, 900 - 47);
 
-                newSquare = new Rectangle(hexagonX, hexagonY, hexagonSize, hexagonSize);
+                newSquare = new Rectangle(hexagonX, hexagonY, 48, 48);
 
                 foreach (Square s in squareList)
                 {
@@ -143,10 +134,11 @@ namespace Deop.io
                 }
                 if (addShape == true)
                 {
-                    Hexagon f = new Hexagon(hexagonX, hexagonY, hexagonSize, hexagonHp, hexagonDamage);
+                    Hexagon f = new Hexagon(hexagonX, hexagonY, 48, 100, 10);
                     hexagonList.Add(f);
                 }
             }
+            gameLoop.Enabled = true;
         }
 
         private void GameScreen_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
@@ -310,10 +302,10 @@ namespace Deop.io
             addShape = true;
             if (randGen.Next(1, squareGenerationSpeed) < 7)
             {
-                squareX = randGen.Next(1, this.Width - squareSize - 1);
-                squareY = randGen.Next(1, this.Height - squareSize - 1);
+                squareX = randGen.Next(1, this.Width - 29);
+                squareY = randGen.Next(1, this.Height - 29);
 
-                newSquare = new Rectangle(squareX, squareY, squareSize, squareSize);
+                newSquare = new Rectangle(squareX, squareY, 30, 30);
 
                 foreach (Square s in squareList)
                 {
@@ -333,16 +325,16 @@ namespace Deop.io
                 }
                 if (addShape == true)
                 {
-                    Square f = new Square(squareX, squareY, squareSize, squareHp, squareDamage);
+                    Square f = new Square(squareX, squareY, 30, 10, 10);
                     squareList.Add(f);
                 }
             }
             else if (randGen.Next(1, squareGenerationSpeed) == 11)
             {
-                hexagonX = randGen.Next(1, this.Width - hexagonSize - 1);
-                hexagonY = randGen.Next(1, this.Height - hexagonSize - 1);
+                hexagonX = randGen.Next(1, this.Width - 47);
+                hexagonY = randGen.Next(1, this.Height - 47);
 
-                newSquare = new Rectangle(hexagonX, hexagonY, hexagonSize, hexagonSize);
+                newSquare = new Rectangle(hexagonX, hexagonY, 48, 48);
 
                 foreach (Square s in squareList)
                 {
@@ -363,7 +355,7 @@ namespace Deop.io
                 }
                 if (addShape == true)
                 {
-                    Hexagon f = new Hexagon(hexagonX, hexagonY, hexagonSize, hexagonHp, hexagonDamage);
+                    Hexagon f = new Hexagon(hexagonX, hexagonY, 48, 100, 10);
                     hexagonList.Add(f);
                     //later add to pentagon gen
                     if (squareGenerationSpeed > 100)
@@ -374,10 +366,10 @@ namespace Deop.io
             }
             else if (randGen.Next(1, squareGenerationSpeed) == 12)
             {
-                triangleX = randGen.Next(1, this.Width - triangleSize - 1);
-                triangleY = randGen.Next(1, this.Height - triangleSize - 1);
+                triangleX = randGen.Next(1, this.Width - 20);
+                triangleY = randGen.Next(1, this.Height - 20);
 
-                newSquare = new Rectangle(triangleX, triangleY, triangleSize, triangleSize);
+                newSquare = new Rectangle(triangleX, triangleY, 20, 20);
 
                 foreach (Square s in squareList)
                 {
@@ -397,12 +389,11 @@ namespace Deop.io
                 }
                 if (addShape == true)
                 {
-                    Triangle t = new Triangle(triangleX, triangleY, triangleSize, triangleHp, triangleDamage, 4, "none");
+                    Triangle t = new Triangle(triangleX, triangleY, 20, 20, 20, 4, "none");
                     triangleList.Add(t);
                 }
             }
-          
-            
+
             p1.Collision(p2);
             foreach (Bullet b in bulletList)
             {
@@ -701,22 +692,22 @@ namespace Deop.io
                     p1CoolDown = p1.reload;
                     if (p1.direction == "left")
                     {
-                        Bullet b = new Bullet(p1.x - 15, p1.y + 10, 20, p1.bulletHealth, p1.bulletDamage, p1.bulletSpeed, p1.direction, p1.playerNumber);
+                        Bullet b = new Bullet(p1.x - 15, p1.y + 10, 20, p1.bulletHealth, p1.bulletDamage, p1.bulletSpeed, p1.direction, 1);
                         bulletList.Add(b);
                     }
                     else if (p1.direction == "right")
                     {
-                        Bullet b = new Bullet(p1.x + p1.size - 5, p1.y + 10, 20, p1.bulletHealth, p1.bulletDamage, p1.bulletSpeed, p1.direction, p1.playerNumber);
+                        Bullet b = new Bullet(p1.x + p1.size - 5, p1.y + 10, 20, p1.bulletHealth, p1.bulletDamage, p1.bulletSpeed, p1.direction, 1);
                         bulletList.Add(b);
                     }
                     else if (p1.direction == "down")
                     {
-                        Bullet b = new Bullet(p1.x + 10, p1.y + p1.size - 5, 20, p1.bulletHealth, p1.bulletDamage, p1.bulletSpeed, p1.direction, p1.playerNumber);
+                        Bullet b = new Bullet(p1.x + 10, p1.y + p1.size - 5, 20, p1.bulletHealth, p1.bulletDamage, p1.bulletSpeed, p1.direction, 1);
                         bulletList.Add(b);
                     }
                     else if (p1.direction == "up")
                     {
-                        Bullet b = new Bullet(p1.x + 10, p1.y - 15, 20, p1.bulletHealth, p1.bulletDamage, p1.bulletSpeed, p1.direction, p1.playerNumber);
+                        Bullet b = new Bullet(p1.x + 10, p1.y - 15, 20, p1.bulletHealth, p1.bulletDamage, p1.bulletSpeed, p1.direction, 1);
                         bulletList.Add(b);
                     }
                 }
@@ -728,22 +719,22 @@ namespace Deop.io
                     p2CoolDown = p2.reload;
                     if (p2.direction == "left")
                     {
-                        Bullet b = new Bullet(p2.x - 15, p2.y + 10, 20, p2.bulletHealth, p2.bulletDamage, p2.bulletSpeed, p2.direction, p2.playerNumber);
+                        Bullet b = new Bullet(p2.x - 15, p2.y + 10, 20, p2.bulletHealth, p2.bulletDamage, p2.bulletSpeed, p2.direction, 2);
                         bulletList.Add(b);
                     }
                     else if (p2.direction == "right")
                     {
-                        Bullet b = new Bullet(p2.x + p2.size - 5, p2.y + 10, 20, p2.bulletHealth, p2.bulletDamage, p2.bulletSpeed, p2.direction, p2.playerNumber);
+                        Bullet b = new Bullet(p2.x + 35, p2.y + 10, 20, p2.bulletHealth, p2.bulletDamage, p2.bulletSpeed, p2.direction, 2);
                         bulletList.Add(b);
                     }
                     else if (p2.direction == "down")
                     {
-                        Bullet b = new Bullet(p2.x + 10, p2.y + p2.size - 5, 20, p2.bulletHealth, p2.bulletDamage, p2.bulletSpeed, p2.direction, p2.playerNumber);
+                        Bullet b = new Bullet(p2.x + 10, p2.y + 35, 20, p2.bulletHealth, p2.bulletDamage, p2.bulletSpeed, p2.direction, 2);
                         bulletList.Add(b);
                     }
                     else if (p2.direction == "up")
                     {
-                        Bullet b = new Bullet(p2.x + 10, p2.y - 15, 20, p2.bulletHealth, p2.bulletDamage, p2.bulletSpeed, p2.direction, p2.playerNumber);
+                        Bullet b = new Bullet(p2.x + 10, p2.y - 15, 20, p2.bulletHealth, p2.bulletDamage, p2.bulletSpeed, p2.direction, 2);
                         bulletList.Add(b);
                     }
                 }
@@ -895,9 +886,9 @@ namespace Deop.io
 
                 }
             }
-                
-            
-            
+
+
+
 
 
             p1CoolDown--;
@@ -918,6 +909,7 @@ namespace Deop.io
         public void GameScreen_Paint(object sender, PaintEventArgs e)
         {
             //draw food, mines, and powerups
+
             foreach (Square s in squareList)
             {
                 e.Graphics.FillRectangle(s.squareBrush, s.x, s.y, s.size, s.size);

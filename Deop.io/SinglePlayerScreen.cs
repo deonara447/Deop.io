@@ -84,11 +84,11 @@ namespace Deop.io
             healthRegenCounter = 0;
             p1 = new Bot(blueBrush, 1, 40, 40, 40, baseMaxHealth, baseDamage, baseSpeed, "none", baseBulletHealth, baseBulletDamage, baseBulletSpeed, baseReload, baseRegen, baseMaxHealth, 1, 0, 0);
             botList.Add(p1);
-            p2 = new Bot(redBrush, 2, 1520, 40, 40, baseMaxHealth, baseDamage, baseSpeed, "none", baseBulletHealth, baseBulletDamage, baseBulletSpeed, baseReload, baseRegen, baseMaxHealth, 1, 0, 0);
+            p2 = new Bot(redBrush, 2, 1520, 40, 40, baseMaxHealth, baseDamage, baseSpeed, "none", baseBulletHealth, baseBulletDamage, baseBulletSpeed, baseReload, 0, baseMaxHealth, 1, 0, 0);
             botList.Add(p2);
-            p3 = new Bot(redBrush, 3, 40, 820, 40, baseMaxHealth, baseDamage, baseSpeed, "none", baseBulletHealth, baseBulletDamage, baseBulletSpeed, baseReload, baseRegen, baseMaxHealth, 1, 0, 0);
+            p3 = new Bot(redBrush, 3, 40, 820, 40, baseMaxHealth, baseDamage, baseSpeed, "none", baseBulletHealth, baseBulletDamage, baseBulletSpeed, baseReload, 0, baseMaxHealth, 1, 0, 0);
             botList.Add(p3);
-            p4 = new Bot(redBrush, 4, 1520, 820, 40, baseMaxHealth, baseDamage, baseSpeed, "none", baseBulletHealth, baseBulletDamage, baseBulletSpeed, baseReload, baseRegen, baseMaxHealth, 1, 0, 0);
+            p4 = new Bot(redBrush, 4, 1520, 820, 40, baseMaxHealth, baseDamage, baseSpeed, "none", baseBulletHealth, baseBulletDamage, baseBulletSpeed, baseReload, 0, baseMaxHealth, 1, 0, 0);
             botList.Add(p4);
             p1CoolDown = p1.reload;
             p2CoolDown = p2.reload;
@@ -145,6 +145,7 @@ namespace Deop.io
                     Hexagon f = new Hexagon(hexagonX, hexagonY, hexagonSize, hexagonHp, hexagonDamage);
                     hexagonList.Add(f);
                 }
+                gameLoop.Enabled = true;
             }
         }
         private void GameScreen_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
@@ -290,7 +291,7 @@ namespace Deop.io
                     }
                 }
             }
-            else if (randGen.Next(1, squareGenerationSpeed) < 12)
+            else if (randGen.Next(1, squareGenerationSpeed) == 12)
             {
                 triangleX = randGen.Next(1, this.Width - triangleSize - 1);
                 triangleY = randGen.Next(1, this.Height - triangleSize - 1);
@@ -688,25 +689,37 @@ namespace Deop.io
 
             if (p1.hp <= 0)
             {
-                //game over sequence
+
+                Form t = this.FindForm();
+                gameLoop.Enabled = false;
+                HighScoreScreen hss = new HighScoreScreen();
+                hss.Location = new Point((t.Width - hss.Width) / 2, (t.Height - hss.Height) / 2);
+                t.Controls.Remove(this);
+                hss.Size = t.Size;
+                t.Controls.Add(hss);
+                hss.Focus();
+                hss.Results(p1.xp);
             }
             if (p2.hp <= 0)
             {
-                p2.BotRespawn();
+                p1.xp += p2.lvl * 50;
+                p2.BotRespawn(randGen.Next(0,8));
                 p2.x = 1520;
                 p2.y = 40;
             }
             if (p3.hp <= 0)
             {
+                p1.xp += p3.lvl * 50;
                 p3.x = 40;
                 p3.y = 820;
-                p3.BotRespawn();
+                p3.BotRespawn(randGen.Next(0,8));
             }
             if (p4.hp <= 0)
             {
+                p1.xp += p4.lvl * 50;
                 p4.x = 1520;
                 p4.y = 820;
-                p4.BotRespawn();
+                p4.BotRespawn(randGen.Next(0,8));
             }
 
             if (healthRegenCounter == 100)
@@ -786,6 +799,7 @@ namespace Deop.io
                     }
                 }
             }
+            p2.xp = p3.xp = p4.xp = 0;
 
             p1CoolDown--;
             p2CoolDown--;

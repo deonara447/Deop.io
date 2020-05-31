@@ -39,6 +39,11 @@
             this.secondScore = new System.Windows.Forms.Label();
             this.thirdScore = new System.Windows.Forms.Label();
             this.mainScreenLabel = new System.Windows.Forms.Label();
+            this.yourPlace = new System.Windows.Forms.Label();
+            this.yourName1 = new System.Windows.Forms.Label();
+            this.yourScore = new System.Windows.Forms.Label();
+            this.yourName2 = new System.Windows.Forms.Label();
+            this.yourName3 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // titleLabel
@@ -122,9 +127,9 @@
             // 
             this.firstScore.Font = new System.Drawing.Font("Segoe UI", 18F);
             this.firstScore.ForeColor = System.Drawing.SystemColors.Highlight;
-            this.firstScore.Location = new System.Drawing.Point(830, 167);
+            this.firstScore.Location = new System.Drawing.Point(774, 167);
             this.firstScore.Name = "firstScore";
-            this.firstScore.Size = new System.Drawing.Size(224, 68);
+            this.firstScore.Size = new System.Drawing.Size(280, 68);
             this.firstScore.TabIndex = 9;
             this.firstScore.Text = "1234";
             this.firstScore.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -133,9 +138,9 @@
             // 
             this.secondScore.Font = new System.Drawing.Font("Segoe UI", 18F);
             this.secondScore.ForeColor = System.Drawing.SystemColors.Highlight;
-            this.secondScore.Location = new System.Drawing.Point(830, 235);
+            this.secondScore.Location = new System.Drawing.Point(774, 235);
             this.secondScore.Name = "secondScore";
-            this.secondScore.Size = new System.Drawing.Size(224, 68);
+            this.secondScore.Size = new System.Drawing.Size(280, 68);
             this.secondScore.TabIndex = 10;
             this.secondScore.Text = "1234";
             this.secondScore.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -144,9 +149,9 @@
             // 
             this.thirdScore.Font = new System.Drawing.Font("Segoe UI", 18F);
             this.thirdScore.ForeColor = System.Drawing.SystemColors.Highlight;
-            this.thirdScore.Location = new System.Drawing.Point(830, 303);
+            this.thirdScore.Location = new System.Drawing.Point(774, 303);
             this.thirdScore.Name = "thirdScore";
-            this.thirdScore.Size = new System.Drawing.Size(224, 68);
+            this.thirdScore.Size = new System.Drawing.Size(280, 68);
             this.thirdScore.TabIndex = 11;
             this.thirdScore.Text = "1234";
             this.thirdScore.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -162,11 +167,79 @@
             this.mainScreenLabel.Text = "return to main menu";
             this.mainScreenLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // yourPlace
+            // 
+            this.yourPlace.Font = new System.Drawing.Font("Segoe UI", 18F);
+            this.yourPlace.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.yourPlace.Location = new System.Drawing.Point(3, 371);
+            this.yourPlace.Name = "yourPlace";
+            this.yourPlace.Size = new System.Drawing.Size(122, 68);
+            this.yourPlace.TabIndex = 13;
+            this.yourPlace.Text = "3";
+            this.yourPlace.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.yourPlace.Visible = false;
+            // 
+            // yourName1
+            // 
+            this.yourName1.BackColor = System.Drawing.Color.Transparent;
+            this.yourName1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.875F, System.Drawing.FontStyle.Bold);
+            this.yourName1.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.yourName1.Location = new System.Drawing.Point(330, 371);
+            this.yourName1.Name = "yourName1";
+            this.yourName1.Size = new System.Drawing.Size(36, 68);
+            this.yourName1.TabIndex = 14;
+            this.yourName1.Text = "Y";
+            this.yourName1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.yourName1.Visible = false;
+            // 
+            // yourScore
+            // 
+            this.yourScore.Font = new System.Drawing.Font("Segoe UI", 18F);
+            this.yourScore.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.yourScore.Location = new System.Drawing.Point(763, 371);
+            this.yourScore.Name = "yourScore";
+            this.yourScore.Size = new System.Drawing.Size(291, 68);
+            this.yourScore.TabIndex = 15;
+            this.yourScore.Text = "score";
+            this.yourScore.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.yourScore.Visible = false;
+            // 
+            // yourName2
+            // 
+            this.yourName2.BackColor = System.Drawing.Color.Transparent;
+            this.yourName2.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.875F);
+            this.yourName2.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.yourName2.Location = new System.Drawing.Point(364, 371);
+            this.yourName2.Name = "yourName2";
+            this.yourName2.Size = new System.Drawing.Size(36, 68);
+            this.yourName2.TabIndex = 16;
+            this.yourName2.Text = "O";
+            this.yourName2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.yourName2.Visible = false;
+            // 
+            // yourName3
+            // 
+            this.yourName3.BackColor = System.Drawing.Color.Transparent;
+            this.yourName3.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.875F);
+            this.yourName3.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.yourName3.Location = new System.Drawing.Point(400, 371);
+            this.yourName3.Name = "yourName3";
+            this.yourName3.Size = new System.Drawing.Size(36, 68);
+            this.yourName3.TabIndex = 17;
+            this.yourName3.Text = "U";
+            this.yourName3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.yourName3.Visible = false;
+            // 
             // HighScoreScreen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
+            this.Controls.Add(this.yourName3);
+            this.Controls.Add(this.yourName2);
+            this.Controls.Add(this.yourScore);
+            this.Controls.Add(this.yourName1);
+            this.Controls.Add(this.yourPlace);
             this.Controls.Add(this.mainScreenLabel);
             this.Controls.Add(this.thirdScore);
             this.Controls.Add(this.secondScore);
@@ -199,5 +272,10 @@
         private System.Windows.Forms.Label secondScore;
         private System.Windows.Forms.Label thirdScore;
         private System.Windows.Forms.Label mainScreenLabel;
+        private System.Windows.Forms.Label yourPlace;
+        private System.Windows.Forms.Label yourName1;
+        private System.Windows.Forms.Label yourScore;
+        private System.Windows.Forms.Label yourName2;
+        private System.Windows.Forms.Label yourName3;
     }
 }

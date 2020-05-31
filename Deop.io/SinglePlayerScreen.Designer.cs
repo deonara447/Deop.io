@@ -171,7 +171,6 @@
             // 
             // gameLoop
             // 
-            this.gameLoop.Enabled = true;
             this.gameLoop.Interval = 16;
             this.gameLoop.Tick += new System.EventHandler(this.gameLoop_Tick);
             // 

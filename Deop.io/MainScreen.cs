@@ -68,7 +68,7 @@ namespace Deop.io
            
             //one and half second pause
             this.Refresh();
-            Thread.Sleep(1500);
+            Thread.Sleep(3000);
 
             //returns label to original
             titleLabel.Text = "Deop.io";

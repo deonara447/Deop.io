@@ -13,10 +13,6 @@ namespace Deop.io
         public SolidBrush botBrush;
         public int x, y, size, hp, damage, playerNumber, speed, bulletHealth, bulletDamage, bulletSpeed, reload, healthRegen, maxHealth, lvl, xp, boost;
         public string direction;
-        int random;
-
-        //random generator
-        Random randGen = new Random();
 
         public Bot(SolidBrush _botBrush, int _playerNumber, int _x, int _y, int _size, int _hp, int _damage, int _speed, string _direction, int _bulletHealth, int _bulletDamage, int _bulletSpeed, int _reload, int _healthRegen, int _maxHealth, int _lvl, int _xp, int _boost)
         {
@@ -90,8 +86,6 @@ namespace Deop.io
                 if (direction == "left")
                 {
                     x = x - speed;
-
-
                 }
             }
 
@@ -303,40 +297,40 @@ namespace Deop.io
 
         }
 
-        public void BotRespawn()
+        public void BotRespawn(int random)
         {
-            random = randGen.Next(0, 8);
+            lvl++;
             if (random == 0)
             {
-                maxHealth += 50;
+                maxHealth += 15;
             }
             else if (random == 1)
             {
-                healthRegen += 4;
+                healthRegen += 1;
             }
             else if (random == 2)
             {
-                damage += 10;
+                damage += 5;
             }
             else if (random == 3)
             {
-                bulletSpeed += 8;
+                bulletSpeed += 2;
             }
             else if (random == 4)
             {
-                bulletHealth += 13;
+                bulletHealth += 2;
             }
             else if (random == 5)
             {
-                bulletDamage += 17;
+                bulletDamage += 5;
             }
             else if (random == 6)
             {
-                reload -= 4;
+                reload -= 1;
             }
             else
             {
-                speed += 2;
+                speed += 1;
             }
             hp = maxHealth;
         }
