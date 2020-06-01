@@ -12,13 +12,15 @@ namespace Deop.io
 {
     public partial class SinglePlayerScreen : UserControl
     {
+        //whether keys are pressed
         Boolean leftArrowDown, rightArrowDown, upArrowDown, downArrowDown;
         Boolean nDown, bDown, mDown, spaceDown;
 
+        //if can shoot
         int p1CoolDown, p2CoolDown, p3CoolDown, p4CoolDown;
-        int squareX, squareY;
-        int hexagonX, hexagonY;
-        int triangleX, triangleY;
+
+        //location of shapes
+        int shapeX, shapeY;
         int squareSize = 30;
         int triangleSize = 21;
         int hexagonSize = 48;
@@ -33,11 +35,11 @@ namespace Deop.io
         int healthRegenCounter;
         int baseMaxHealth = 150;
         int baseDamage = 9;
-        int baseSpeed = 6;
+        int baseSpeed = 3;
         int baseBulletHealth = 5;
         int baseBulletDamage = 9;
-        int baseBulletSpeed = 6;
-        int baseReload = 25;
+        int baseBulletSpeed = 5;
+        int baseReload = 40;
         int baseRegen = 5;
 
 
@@ -46,8 +48,8 @@ namespace Deop.io
         int keyCoolDown;
 
 
-        int lvlUpgrade
-            ;
+        int lvlUpgrade;
+
         Point d1, d2, d3, d4, d5, d6;
 
         public SolidBrush blueBrush = new SolidBrush(Color.DeepSkyBlue);
@@ -98,9 +100,9 @@ namespace Deop.io
             for (int i = 0; i <= 20; i++)
             {
                 addShape = true;
-                squareX = randGen.Next(1, 1600 - squareSize - 1);
-                squareY = randGen.Next(1, 900 - squareSize - 1);
-                newSquare = new Rectangle(squareX, squareY, squareSize, squareSize);
+                shapeX = randGen.Next(1, 1600 - squareSize - 1);
+                shapeY = randGen.Next(1, 900 - squareSize - 1);
+                newSquare = new Rectangle(shapeX, shapeY, squareSize, squareSize);
 
                 foreach (Square s in squareList)
                 {
@@ -112,17 +114,17 @@ namespace Deop.io
                 }
                 if (addShape == true)
                 {
-                    Square f = new Square(squareX, squareY, squareSize, squareHp, squareDamage);
+                    Square f = new Square(shapeX, shapeY, squareSize, squareHp, squareDamage);
                     squareList.Add(f);
                 }
             }
             addShape = true;
             for (int i = 0; i <= 5; i++)
             {
-                hexagonX = randGen.Next(1, 1600 - hexagonSize - 1);
-                hexagonY = randGen.Next(1, 900 - hexagonSize - 1);
+                shapeX = randGen.Next(1, 1600 - hexagonSize - 1);
+                shapeY = randGen.Next(1, 900 - hexagonSize - 1);
 
-                newSquare = new Rectangle(hexagonX, hexagonY, hexagonSize, hexagonSize);
+                newSquare = new Rectangle(shapeX, shapeY, hexagonSize, hexagonSize);
 
                 foreach (Square s in squareList)
                 {
@@ -143,7 +145,7 @@ namespace Deop.io
                 }
                 if (addShape == true)
                 {
-                    Hexagon f = new Hexagon(hexagonX, hexagonY, hexagonSize, hexagonHp, hexagonDamage);
+                    Hexagon f = new Hexagon(shapeX, shapeY, hexagonSize, hexagonHp, hexagonDamage);
                     hexagonList.Add(f);
                 }
                 gameLoop.Enabled = true;
@@ -230,10 +232,10 @@ namespace Deop.io
             addShape = true;
             if (randGen.Next(1, squareGenerationSpeed) < 7)
             {
-                squareX = randGen.Next(1, this.Width - squareSize - 1);
-                squareY = randGen.Next(1, this.Height - squareSize - 1);
+                shapeX = randGen.Next(1, this.Width - squareSize - 1);
+                shapeY = randGen.Next(1, this.Height - squareSize - 1);
 
-                newSquare = new Rectangle(squareX, squareY, squareSize, squareSize);
+                newSquare = new Rectangle(shapeX, shapeY, squareSize, squareSize);
 
                 foreach (Square s in squareList)
                 {
@@ -253,16 +255,16 @@ namespace Deop.io
                 }
                 if (addShape == true)
                 {
-                    Square f = new Square(squareX, squareY, squareSize, squareHp, squareDamage);
+                    Square f = new Square(shapeX, shapeY, squareSize, squareHp, squareDamage);
                     squareList.Add(f);
                 }
             }
             else if (randGen.Next(1, squareGenerationSpeed) == 11)
             {
-                hexagonX = randGen.Next(1, this.Width - hexagonSize - 1);
-                hexagonY = randGen.Next(1, this.Height - hexagonSize - 1);
+                shapeX = randGen.Next(1, this.Width - hexagonSize - 1);
+                shapeY = randGen.Next(1, this.Height - hexagonSize - 1);
 
-                newSquare = new Rectangle(hexagonX, hexagonY, hexagonSize, hexagonSize);
+                newSquare = new Rectangle(shapeX, shapeY, hexagonSize, hexagonSize);
 
                 foreach (Square s in squareList)
                 {
@@ -283,7 +285,7 @@ namespace Deop.io
                 }
                 if (addShape == true)
                 {
-                    Hexagon f = new Hexagon(hexagonX, hexagonY, hexagonSize, hexagonHp, hexagonDamage);
+                    Hexagon f = new Hexagon(shapeX, shapeY, hexagonSize, hexagonHp, hexagonDamage);
                     hexagonList.Add(f);
                     //later add to pentagon gen
                     if (squareGenerationSpeed > 100)
@@ -294,10 +296,10 @@ namespace Deop.io
             }
             else if (randGen.Next(1, squareGenerationSpeed) == 12)
             {
-                triangleX = randGen.Next(1, this.Width - triangleSize - 1);
-                triangleY = randGen.Next(1, this.Height - triangleSize - 1);
+                shapeX = randGen.Next(1, this.Width - triangleSize - 1);
+                shapeY = randGen.Next(1, this.Height - triangleSize - 1);
 
-                newSquare = new Rectangle(triangleX, triangleY, triangleSize, triangleSize);
+                newSquare = new Rectangle(shapeX, shapeY, triangleSize, triangleSize);
 
                 foreach (Square s in squareList)
                 {
@@ -317,7 +319,7 @@ namespace Deop.io
                 }
                 if (addShape == true)
                 {
-                    Triangle t = new Triangle(triangleX, triangleY, triangleSize, triangleHp, triangleDamage, 6, "none");
+                    Triangle t = new Triangle(shapeX, shapeY, triangleSize, triangleHp, triangleDamage, 3, "none");
                     triangleList.Add(t);
                 }
             }
