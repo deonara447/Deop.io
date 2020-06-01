@@ -29,8 +29,10 @@ namespace Deop.io
                     Application.Exit();
                     break;
                 case Keys.N:
-                    SinglePlayerScreen sps = new SinglePlayerScreen();
-                    sps.Location = new Point(f.Location.X, f.Location.Y);
+                    SinglePlayerScreen sps = new SinglePlayerScreen
+                    {
+                        Location = new Point(f.Location.X, f.Location.Y)
+                    };
                     f.Controls.Remove(this);
                     sps.Size = f.Size;
                     f.Controls.Add(sps);
@@ -53,8 +55,10 @@ namespace Deop.io
                     ins.Focus();
                     break;
                 case Keys.Space:
-                    GameScreen gs = new GameScreen();
-                    gs.Location = new Point(f.Location.X, f.Location.Y);
+                    GameScreen gs = new GameScreen
+                    {
+                        Location = new Point(f.Location.X, f.Location.Y)
+                    };
                     f.Controls.Remove(this);
                     gs.Size = f.Size;
                     f.Controls.Add(gs);
