@@ -117,4 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="player1TextLabel.Text" xml:space="preserve">
+    <value>The objective is to obtain as much XP as possible before dying. Shapes give you XP and so does killing bots. Earn XP and level up to upgrade an attribute of your choice. Watch out for triangles as they deal damage. Bots respawn with improved stats. Use your joystick to move, the bottom button to shoot, the left and right buttons to choose the attribute you wish to upgrade and the top button to confirm the upgrade. When the game is over, enter your initials using the right joystick.</value>
+  </data>
+  <data name="player2TextLabel.Text" xml:space="preserve">
+    <value>The objective is to reach 8000 XP before your opponents. Shapes give you XP and so does killing your opponent. Earn XP and level up to upgrade an attribute of your choice. The mega square awards lots of XP. Watch out for triangles as they deal damage. Use your joystick to move, the bottom button to shoot, the left and right buttons to choose the attribute you wish to upgrade and the top button to confirm the upgrade.</value>
+  </data>
 </root>
