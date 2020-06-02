@@ -7,11 +7,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Media;
 
 namespace Deop.io
 {
     public partial class SinglePlayerScreen : UserControl
     {
+        //sounds
+        SoundPlayer gameStart = new SoundPlayer(Properties.Resources.gameStart);
+        SoundPlayer youLose = new SoundPlayer(Properties.Resources.youLose);
+
         //whether keys are pressed
         Boolean leftArrowDown, rightArrowDown, upArrowDown, downArrowDown;
         Boolean nDown, bDown, mDown, spaceDown;
@@ -68,7 +73,7 @@ namespace Deop.io
 
         //array of points for drawing shapes
         Point[] triangleArray = new Point[3];
-        Point[] HexagonArray = new Point[6];
+        Point[] hexagonArray = new Point[6];
 
         //for drawing shapes
         public SolidBrush blueBrush = new SolidBrush(Color.DeepSkyBlue);
@@ -112,7 +117,7 @@ namespace Deop.io
             squareGenerationSpeed = 300;
 
             //create bot objects with attributes and add them to botList
-            p1 = new Bot(blueBrush, 1, 40, 40, 40, baseMaxHealth, baseDamage, baseSpeed, "none", baseBulletHealth, baseBulletDamage, baseBulletSpeed, baseReload, baseRegen, baseMaxHealth, 1, 0, 0);
+            p1 = new Bot(blueBrush, 1, 40, 40, 40, baseMaxHealth, baseDamage, baseSpeed, "none", baseBulletHealth, baseBulletDamage, baseBulletSpeed, baseReload, baseRegen, baseMaxHealth, 1, 5000, 0);
             botList.Add(p1);
             p2 = new Bot(redBrush, 2, 1520, 40, 40, baseMaxHealth, baseDamage, baseSpeed, "none", baseBulletHealth, baseBulletDamage, baseBulletSpeed, baseReload, 0, baseMaxHealth, 1, 0, 0);
             botList.Add(p2);
@@ -187,6 +192,9 @@ namespace Deop.io
                     hexagonList.Add(f);
                 }
 
+                //game start sound
+                gameStart.Play();
+                //start game
                 gameLoop.Enabled = true;
             }
         }
@@ -781,8 +789,13 @@ namespace Deop.io
 
                 if (z != null)
                 {
-                    //switch to high score screen
+                    //stop game
                     gameLoop.Enabled = false;
+
+                    //play sound
+                    youLose.PlaySync();
+
+                    //switch to high score screen
                     HighScoreScreen hss = new HighScoreScreen();
                     hss.Location = new Point((z.Width - hss.Width) / 2, (z.Height - hss.Height) / 2);
                     z.Controls.Remove(this);
@@ -946,15 +959,15 @@ namespace Deop.io
                 d5 = new Point(h.x + 12, h.y + 48);
                 d6 = new Point(h.x, h.y + 24);
 
-                HexagonArray[0] = d1;
-                HexagonArray[1] = d2;
-                HexagonArray[2] = d3;
-                HexagonArray[3] = d4;
-                HexagonArray[4] = d5;
-                HexagonArray[5] = d6;
+                hexagonArray[0] = d1;
+                hexagonArray[1] = d2;
+                hexagonArray[2] = d3;
+                hexagonArray[3] = d4;
+                hexagonArray[4] = d5;
+                hexagonArray[5] = d6;
 
                 //draw hexagon using points
-                e.Graphics.FillPolygon(h.hexagonBrush, HexagonArray);
+                e.Graphics.FillPolygon(h.hexagonBrush, hexagonArray);
             }
 
             foreach (Bullet b in bulletList)

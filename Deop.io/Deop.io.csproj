@@ -116,6 +116,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <EmbeddedResource Include="SinglePlayerScreen.resx">
       <DependentUpon>SinglePlayerScreen.cs</DependentUpon>
@@ -134,6 +135,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\gameOver2.wav" />
+    <None Include="Resources\youLose.wav" />
+    <None Include="Resources\gameStart.wav" />
+    <None Include="Resources\winner.wav" />
+    <None Include="Resources\404151__mattix__select-granted-01.wav" />
+    <None Include="Resources\highScore.mp3" />
+    <None Include="Resources\highScore.wav" />
     <Content Include="Score.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

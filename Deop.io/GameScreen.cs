@@ -7,12 +7,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Media;
+using System.Threading;
 
 
 namespace Deop.io
 {
     public partial class GameScreen : UserControl
     {
+        //sounds
+        SoundPlayer gameStart = new SoundPlayer(Properties.Resources.gameStart);
+        SoundPlayer gameOver  = new SoundPlayer(Properties.Resources.gameOver);
+
         //whether keys are pressed
         Boolean leftArrowDown, rightArrowDown, upArrowDown, downArrowDown;
         Boolean wArrowDown, aArrowDown, sArrowDown, dArrowDown;
@@ -114,12 +120,15 @@ namespace Deop.io
         }
         public void OnStart()
         {
+            //game start sound
+            gameStart.Play();
+
             //reset variables
             keyCoolDown1 = keyCoolDown2 = attribute1 = attribute2 = healthRegenCounter = 0;
             squareGenerationSpeed = 300;
 
             //create bot objects with attributes and add them to botList
-            p1 = new Bot(blueBrush, 1, 50, 430, 40, baseMaxHealth, baseDamage, baseSpeed, "none", baseBulletHealth, baseBulletDamage, baseBulletSpeed, baseReload, baseRegen, baseMaxHealth, 1, 0, 0);
+            p1 = new Bot(blueBrush, 1, 50, 430, 40, baseMaxHealth, baseDamage, baseSpeed, "none", baseBulletHealth, baseBulletDamage, baseBulletSpeed, baseReload, baseRegen, baseMaxHealth, 1, 7999, 0);
             botList.Add(p1);
             p2 = new Bot(redBrush, 2, 1510, 430, 40, baseMaxHealth, baseDamage, baseSpeed, "none", baseBulletHealth, baseBulletDamage, baseBulletSpeed, baseReload, baseRegen, baseMaxHealth, 1, 0, 0);
             botList.Add(p2);
@@ -194,6 +203,7 @@ namespace Deop.io
                     hexagonList.Add(f);
                 }
 
+                //start game
                 gameLoop.Enabled = true;
             }
         }
@@ -329,6 +339,9 @@ namespace Deop.io
                 //stop game
                 gameLoop.Enabled = false;
 
+                //play sound
+                gameOver.PlaySync();
+
                 //go to main screen
                 MainScreen ms = new MainScreen();
                 Form f = this.FindForm();
@@ -344,6 +357,9 @@ namespace Deop.io
             if (p2.xp >= 8000)
             {
                 gameLoop.Enabled = false;
+
+                gameOver.PlaySync();
+
                 MainScreen ms = new MainScreen();
                 Form f = this.FindForm();
                 ms.Location = new Point((f.Width - ms.Width) / 2, (f.Height - ms.Height) / 2);

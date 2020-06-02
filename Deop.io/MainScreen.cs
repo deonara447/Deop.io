@@ -8,11 +8,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Threading;
+using System.Media;
 
 namespace Deop.io
 {
     public partial class MainScreen : UserControl
     {
+        //sound
+        SoundPlayer winner = new SoundPlayer(Properties.Resources.winner);
         public MainScreen()
         {
             InitializeComponent();
@@ -75,6 +78,9 @@ namespace Deop.io
         {
             //display winner
             titleLabel.Text = "Player " + Convert.ToString(p) + " is the winner!";
+
+            //play sound
+            winner.Play();
 
             //three second pause
             this.Refresh();

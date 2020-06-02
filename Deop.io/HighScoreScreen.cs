@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Threading;
+using System.Media;
 
 namespace Deop.io
 {
@@ -24,6 +25,9 @@ namespace Deop.io
 
         //for downloading and uploading high scores
         List<HighScore> scores = new List<HighScore>();
+
+        //sound
+        SoundPlayer highScore = new SoundPlayer(Properties.Resources.highScore);
 
         public HighScoreScreen()
         {
@@ -154,6 +158,21 @@ namespace Deop.io
 
         public void Results(int xp)
         {
+            //update high scores
+            hs = new HighScore("YOU", xp);
+            scores.Add(hs);
+            scores = scores.OrderByDescending(x => x.score).ToList();
+
+            //if a highscore
+            if (scores.IndexOf(hs) < 3)
+            {
+                //play sound
+                highScore.Play();
+                //4s pause
+                this.Refresh();
+                Thread.Sleep(4000);
+            }
+
             //make labels visible
             yourName1.Visible = true;
             yourName2.Visible = true;
@@ -165,11 +184,6 @@ namespace Deop.io
             yourScore.Text = Convert.ToString(xp);
             mainScreenLabel.Text = "save score";
 
-            //update high scores
-            hs = new HighScore("YOU", xp);
-            scores.Add(hs);
-            scores = scores.OrderByDescending(x => x.score).ToList();
-
             firstName.Text = scores[0].name;
             secondName.Text = scores[1].name;
             thirdName.Text = scores[2].name;
@@ -179,10 +193,6 @@ namespace Deop.io
             thirdScore.Text = Convert.ToString(scores[2].score);
 
             yourPlace.Text = Convert.ToString(scores.IndexOf(hs) + 1);
-
-            //3s pause
-            this.Refresh();
-            Thread.Sleep(3000);
         }
 
         public void Initials()
