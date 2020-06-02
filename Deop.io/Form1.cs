@@ -10,6 +10,7 @@ using System.Windows.Forms;
 
 namespace Deop.io
 {
+    //talk about game HERE:
     public partial class Form1 : Form
     {
         public Form1()

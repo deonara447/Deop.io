@@ -16,8 +16,10 @@ namespace Deop.io
         {
             InitializeComponent();
         }
+
         private void InstructionScreen_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
+            //if key pressed
             switch (e.KeyCode)
             {
                 case Keys.Escape:
@@ -25,6 +27,7 @@ namespace Deop.io
                     Application.Exit();
                     break;
                 case Keys.Space:
+                    //go to MainScreen
                     MainScreen ms = new MainScreen();
                     Form f = this.FindForm();
                     ms.Location = new Point((f.Width - ms.Width) / 2, (f.Height - ms.Height) / 2);

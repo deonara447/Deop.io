@@ -13,9 +13,6 @@ namespace Deop.io
         public SolidBrush hexagonBrush;
         public int x, y, size, hp, damage;
 
-        //random generator
-        Random randGen = new Random();
-
         public Hexagon(int _x, int _y, int _size, int _hp, int _damage)
         {
             x = _x;

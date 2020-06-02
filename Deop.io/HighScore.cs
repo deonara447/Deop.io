@@ -8,6 +8,7 @@ namespace Deop.io
 {
     public class HighScore
     {
+        //variables in my class
         public string name;
         public int score;
 

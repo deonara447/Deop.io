@@ -13,9 +13,6 @@ namespace Deop.io
         public SolidBrush squareBrush;
         public int x, y, size, hp, damage;
 
-        //random generator
-        Random randGen = new Random();
-
         public Square(int _x, int _y, int _size, int _hp, int _damage)
         {
             x = _x;
@@ -25,6 +22,5 @@ namespace Deop.io
             damage = _damage;
             squareBrush = new SolidBrush(Color.Yellow);
         }
-        
-        }
+    }
 }
