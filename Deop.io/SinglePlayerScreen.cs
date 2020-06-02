@@ -66,6 +66,10 @@ namespace Deop.io
         //for drawing shapes
         Point d1, d2, d3, d4, d5, d6;
 
+        //array of points for drawing shapes
+        Point[] triangleArray = new Point[3];
+        Point[] HexagonArray = new Point[6];
+
         //for drawing shapes
         public SolidBrush blueBrush = new SolidBrush(Color.DeepSkyBlue);
         public SolidBrush redBrush = new SolidBrush(Color.Red);
@@ -596,7 +600,7 @@ namespace Deop.io
 
             foreach (Triangle t in triangleList)
             {
-                //triangle moves toward player
+                //triangle moves towards player
                 if (t.x > p1.x + 10)
                 {
                     t.Move("left");
@@ -934,6 +938,7 @@ namespace Deop.io
             }
             foreach (Hexagon h in hexagonList)
             {
+                //vertexes
                 d1 = new Point(h.x + 12, h.y);
                 d2 = new Point(h.x + 36, h.y);
                 d3 = new Point(h.x + 48, h.y + 24);
@@ -941,17 +946,26 @@ namespace Deop.io
                 d5 = new Point(h.x + 12, h.y + 48);
                 d6 = new Point(h.x, h.y + 24);
 
+                HexagonArray[0] = d1;
+                HexagonArray[1] = d2;
+                HexagonArray[2] = d3;
+                HexagonArray[3] = d4;
+                HexagonArray[4] = d5;
+                HexagonArray[5] = d6;
 
-                Point[] pointArray = { d1, d2, d3, d4, d5, d6, };
-                e.Graphics.FillPolygon(h.hexagonBrush, pointArray);
+                //draw hexagon using points
+                e.Graphics.FillPolygon(h.hexagonBrush, HexagonArray);
             }
+
             foreach (Bullet b in bulletList)
             {
                 e.Graphics.FillEllipse(b.bulletBrush, new Rectangle(b.x, b.y, b.size, b.size));
             }
+
+
             foreach (Bot b in botList)
             {
-                //draw 'gun; in direction of movement
+                //draw 'gun' in direction of movement
                 if (b.direction == "right")
                 {
                     e.Graphics.FillRectangle(greyBrush, b.x + b.size - 5, b.y + 10, 20, 20);
@@ -999,10 +1013,14 @@ namespace Deop.io
                     d3 = new Point(t.x + 21, t.y + 21);
                 }
 
-                Point[] pointArray = { d1, d2, d3 };
-                e.Graphics.FillPolygon(t.triangleBrush, pointArray);
+                triangleArray[0] = d1;
+                triangleArray[1] = d2;
+                triangleArray[2] = d3;
+
+                e.Graphics.FillPolygon(t.triangleBrush, triangleArray);
             }
         }
+
         private void BoldLabel()
         {
             //reset fonts
@@ -1133,9 +1151,9 @@ namespace Deop.io
             {
                 if (reloadLabel.ForeColor != Color.Red)
                 {
-                    p1.reload -= 4;
+                    p1.reload -= 5;
                     p1.boost++;
-                    if (p1.reload < 6)
+                    if (p1.reload < 17)
                     {
                         reloadLabel.ForeColor = Color.Red;
                     }
@@ -1147,7 +1165,7 @@ namespace Deop.io
                 {
                     p1.speed += 2;
                     p1.boost++;
-                    if (p1.speed > 13)
+                    if (p1.speed > 11)
                     {
                         speedLabel.ForeColor = Color.Red;
                     }

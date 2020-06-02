@@ -13,18 +13,41 @@ namespace Deop.io
 {
     public partial class GameScreen : UserControl
     {
-        //Movement booleans for p1 and p2
+        //whether keys are pressed
         Boolean leftArrowDown, rightArrowDown, upArrowDown, downArrowDown;
         Boolean wArrowDown, aArrowDown, sArrowDown, dArrowDown;
         Boolean nDown, bDown, mDown, spaceDown;
         Boolean cDown, vDown, xDown, zDown;
+
+        //if can shoot
         int p1CoolDown, p2CoolDown;
-        int squareX, squareY;
-        int hexagonX, hexagonY;
-        int triangleX, triangleY;
+
+        //location of shapes
+        int shapeX, shapeY;
+
+        //shape sizes
+        int squareSize = 30;
+        int triangleSize = 21;
+        int hexagonSize = 48;
+
+        //if shape will be added
         Boolean addShape;
+
+        //speed of shape generation
         int squareGenerationSpeed;
+
+        //shape health and damage
+        int squareHp = 10;
+        int squareDamage = 10;
+        int hexagonHp = 100;
+        int hexagonDamage = 10;
+        int triangleHp = 20;
+        int triangleDamage = 20;
+
+        //when health regen occurs
         int healthRegenCounter;
+
+        //base bot attributes
         int baseMaxHealth = 150;
         int baseDamage = 9;
         int baseSpeed = 4;
@@ -33,39 +56,57 @@ namespace Deop.io
         int baseBulletSpeed = 6;
         int baseReload = 25;
         int baseRegen = 5;
-        
 
+        //what attribute is being upgraded
         int attribute1, attribute2;
 
+        //interval between key presses
         int keyCoolDown1, keyCoolDown2;
 
-
+        //xp to next lvl upgrade
         int lvlUpgrade, lvl1Upgrade, lvl2Upgrade;
+
+        //for drawing shapes
         Point d1, d2, d3, d4, d5, d6;
 
+        //array of points for drawing shapes
+        Point[] triangleArray = new Point[3];
+        Point[] HexagonArray = new Point[6];
+
+        //for determining Manhattan distance
         int d1x, d1y, d2x, d2y, d1t, d2t;
 
+        //for drawing shapes
         public SolidBrush blueBrush = new SolidBrush(Color.DeepSkyBlue);
         public SolidBrush redBrush = new SolidBrush(Color.Red);
         public SolidBrush greyBrush = new SolidBrush(Color.Gray);
 
+        //object lists
         List<Square> squareList = new List<Square>();
         List<Hexagon> hexagonList = new List<Hexagon>();
         List<Triangle> triangleList = new List<Triangle>();
         List<Bullet> bulletList = new List<Bullet>();
         List<Bot> botList = new List<Bot>();
+
+        //list of objects to be removed
         List<Square> deadSquareList = new List<Square>();
         List<Hexagon> deadHexagonList = new List<Hexagon>();
         List<Triangle> deadTriangleList = new List<Triangle>();
         List<Bullet> deadBulletList = new List<Bullet>();
+
+        //bot objects
         Bot p1, p2;
+
+        //for checking collisions
         Rectangle newSquare;
         Rectangle r;
 
+        //if time for upgrade
         Boolean boost1, boost2;
 
         //random number generator
         Random randGen = new Random();
+
         public GameScreen()
         {
             InitializeComponent();
@@ -73,72 +114,88 @@ namespace Deop.io
         }
         public void OnStart()
         {
-            boost1 = boost2 = false;
-            keyCoolDown1 = keyCoolDown2 = attribute1 = attribute2 = 0;
-            healthRegenCounter = 0;
+            //reset variables
+            keyCoolDown1 = keyCoolDown2 = attribute1 = attribute2 = healthRegenCounter = 0;
+            squareGenerationSpeed = 300;
+
+            //create bot objects with attributes and add them to botList
             p1 = new Bot(blueBrush, 1, 50, 430, 40, baseMaxHealth, baseDamage, baseSpeed, "none", baseBulletHealth, baseBulletDamage, baseBulletSpeed, baseReload, baseRegen, baseMaxHealth, 1, 0, 0);
             botList.Add(p1);
             p2 = new Bot(redBrush, 2, 1510, 430, 40, baseMaxHealth, baseDamage, baseSpeed, "none", baseBulletHealth, baseBulletDamage, baseBulletSpeed, baseReload, baseRegen, baseMaxHealth, 1, 0, 0);
             botList.Add(p2);
-            p1CoolDown = p1.reload;
-            p2CoolDown = p2.reload;
-            Square g = new Square(650, 300, 300, 2500, 30);
+
+            //create mega square
+            Square g = new Square(650, 300, 300, 2500, squareSize);
             squareList.Add(g);
 
-            squareGenerationSpeed = 300;
+            //create 20 squares
             for (int i = 0; i <= 20; i++)
             {
                 addShape = true;
-                squareX = randGen.Next(1, 1600 - 29);
-                squareY = randGen.Next(1, 900 - 29);
-                newSquare = new Rectangle(squareX, squareY, 30, 30);
 
+                //random location
+                shapeX = randGen.Next(1, 1600 - squareSize - 1);
+                shapeY = randGen.Next(1, 900 - squareSize - 1);
+                newSquare = new Rectangle(shapeX, shapeY, squareSize, squareSize);
+
+                //check to see if collision with a square
                 foreach (Square s in squareList)
                 {
-                    r = new Rectangle(s.x -1, s.y - 1, s.size+1, s.size+1);
+                    r = new Rectangle(s.x - 1, s.y - 1, s.size + 1, s.size + 1);
+
                     if (r.IntersectsWith(newSquare))
                     {
                         addShape = false;
                     }
                 }
+
+                //if not colliding, add shape
                 if (addShape == true)
                 {
-                    Square f = new Square(squareX, squareY, 30, 10, 10);
+                    Square f = new Square(shapeX, shapeY, squareSize, squareHp, squareDamage);
                     squareList.Add(f);
                 }
             }
+
             addShape = true;
+
+            //create 5 hexagons
             for (int i = 0; i <= 5; i++)
             {
-                hexagonX = randGen.Next(1, 1600 - 47);
-                hexagonY = randGen.Next(1, 900 - 47);
+                shapeX = randGen.Next(1, 1600 - hexagonSize - 1);
+                shapeY = randGen.Next(1, 900 - hexagonSize - 1);
+                newSquare = new Rectangle(shapeX, shapeY, hexagonSize, hexagonSize);
 
-                newSquare = new Rectangle(hexagonX, hexagonY, 48, 48);
-
+                //check to see if collision with a square
                 foreach (Square s in squareList)
                 {
-                    r = new Rectangle(s.x -1 , s.y -1, s.size +1, s.size+1);
+                    r = new Rectangle(s.x - 1, s.y - 1, s.size + 1, s.size + 1);
+
                     if (r.IntersectsWith(newSquare))
                     {
                         addShape = false;
                     }
                 }
 
+                //check to see if collision with a hexagon
                 foreach (Hexagon h in hexagonList)
                 {
-                    r = new Rectangle(h.x-1, h.y-1, h.size+1, h.size+1);
+                    r = new Rectangle(h.x - 1, h.y - 1, h.size + 1, h.size + 1);
+
                     if (r.IntersectsWith(newSquare))
                     {
                         addShape = false;
                     }
                 }
+
                 if (addShape == true)
                 {
-                    Hexagon f = new Hexagon(hexagonX, hexagonY, 48, 100, 10);
+                    Hexagon f = new Hexagon(shapeX, shapeY, hexagonSize, hexagonHp, hexagonDamage);
                     hexagonList.Add(f);
                 }
+
+                gameLoop.Enabled = true;
             }
-            gameLoop.Enabled = true;
         }
 
         private void GameScreen_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
@@ -195,6 +252,7 @@ namespace Deop.io
                     vDown = true;
                     break;
                 case Keys.Escape:
+                    //returns to MainScreen
                     MainScreen ms = new MainScreen();
                     Form f = this.FindForm();
                     ms.Location = new Point((f.Width - ms.Width) / 2, (f.Height - ms.Height) / 2);
@@ -264,9 +322,14 @@ namespace Deop.io
 
         private void gameLoop_Tick(object sender, EventArgs e)
         {
+            //each timer tick
+            //if player reaches winning XP
             if (p1.xp >= 8000)
             {
+                //stop game
                 gameLoop.Enabled = false;
+
+                //go to main screen
                 MainScreen ms = new MainScreen();
                 Form f = this.FindForm();
                 ms.Location = new Point((f.Width - ms.Width) / 2, (f.Height - ms.Height) / 2);
@@ -274,8 +337,9 @@ namespace Deop.io
                 ms.Size = f.Size;
                 f.Controls.Add(ms);
                 ms.Focus();
-                ms.Winner(1);
 
+                //display winner
+                ms.Winner(1);
             }
             if (p2.xp >= 8000)
             {
@@ -288,9 +352,9 @@ namespace Deop.io
                 f.Controls.Add(ms);
                 ms.Focus();
                 ms.Winner(2);
-
             }
 
+            //check if can upgrade attribute 
             if (p1.boost != p1.lvl)
             {
                 boost1 = true;
@@ -299,46 +363,53 @@ namespace Deop.io
             {
                 boost2 = true;
             }
+
+
+            //shape generation (same as OnStart)
             addShape = true;
+
             if (randGen.Next(1, squareGenerationSpeed) < 7)
             {
-                squareX = randGen.Next(1, this.Width - 29);
-                squareY = randGen.Next(1, this.Height - 29);
-
-                newSquare = new Rectangle(squareX, squareY, 30, 30);
+                shapeX = randGen.Next(1, this.Width - squareSize - 1);
+                shapeY = randGen.Next(1, this.Height - squareSize - 1);
+                newSquare = new Rectangle(shapeX, shapeY, squareSize, squareSize);
 
                 foreach (Square s in squareList)
                 {
                     r = new Rectangle(s.x - 1, s.y - 1, s.size + 1, s.size + 1);
+
                     if (r.IntersectsWith(newSquare))
                     {
                         addShape = false;
                     }
                 }
+
                 foreach (Hexagon h in hexagonList)
                 {
                     r = new Rectangle(h.x - 1, h.y - 1, h.size + 1, h.size + 1);
+
                     if (r.IntersectsWith(newSquare))
                     {
                         addShape = false;
                     }
                 }
+
                 if (addShape == true)
                 {
-                    Square f = new Square(squareX, squareY, 30, 10, 10);
+                    Square f = new Square(shapeX, shapeY, squareSize, squareHp, squareDamage);
                     squareList.Add(f);
                 }
             }
             else if (randGen.Next(1, squareGenerationSpeed) == 11)
             {
-                hexagonX = randGen.Next(1, this.Width - 47);
-                hexagonY = randGen.Next(1, this.Height - 47);
-
-                newSquare = new Rectangle(hexagonX, hexagonY, 48, 48);
+                shapeX = randGen.Next(1, this.Width - hexagonSize - 1);
+                shapeY = randGen.Next(1, this.Height - hexagonSize - 1);
+                newSquare = new Rectangle(shapeX, shapeY, hexagonSize, hexagonSize);
 
                 foreach (Square s in squareList)
                 {
                     r = new Rectangle(s.x - 1, s.y - 1, s.size + 1, s.size + 1);
+
                     if (r.IntersectsWith(newSquare))
                     {
                         addShape = false;
@@ -348,16 +419,19 @@ namespace Deop.io
                 foreach (Hexagon h in hexagonList)
                 {
                     r = new Rectangle(h.x - 1, h.y - 1, h.size + 1, h.size + 1);
+
                     if (r.IntersectsWith(newSquare))
                     {
                         addShape = false;
                     }
                 }
+
                 if (addShape == true)
                 {
-                    Hexagon f = new Hexagon(hexagonX, hexagonY, 48, 100, 10);
+                    Hexagon f = new Hexagon(shapeX, shapeY, hexagonSize, hexagonHp, hexagonDamage);
                     hexagonList.Add(f);
-                    //later add to pentagon gen
+
+                    //increase shape generation speed
                     if (squareGenerationSpeed > 100)
                     {
                         squareGenerationSpeed -= 3;
@@ -366,14 +440,14 @@ namespace Deop.io
             }
             else if (randGen.Next(1, squareGenerationSpeed) == 12)
             {
-                triangleX = randGen.Next(1, this.Width - 20);
-                triangleY = randGen.Next(1, this.Height - 20);
-
-                newSquare = new Rectangle(triangleX, triangleY, 20, 20);
+                shapeX = randGen.Next(1, this.Width - triangleSize - 1);
+                shapeY = randGen.Next(1, this.Height - triangleSize - 1);
+                newSquare = new Rectangle(shapeX, shapeY, triangleSize, triangleSize);
 
                 foreach (Square s in squareList)
                 {
                     r = new Rectangle(s.x - 1, s.y - 1, s.size + 1, s.size + 1);
+
                     if (r.IntersectsWith(newSquare))
                     {
                         addShape = false;
@@ -389,27 +463,39 @@ namespace Deop.io
                 }
                 if (addShape == true)
                 {
-                    Triangle t = new Triangle(triangleX, triangleY, 20, 20, 20, 4, "none");
+                    Triangle t = new Triangle(shapeX, shapeY, triangleSize, triangleHp, triangleDamage, 3, "none");
                     triangleList.Add(t);
                 }
             }
 
+            //check if players collide
             p1.Collision(p2);
+
+
             foreach (Bullet b in bulletList)
             {
+                //bullet move method
                 b.Move(b.direction);
+
+                //square collision method
                 foreach (Square s in squareList)
                 {
                     b.SquareCollision(s, p1, p2);
                 }
+
+                //hexagon collision method
                 foreach (Hexagon h in hexagonList)
                 {
                     b.HexagonCollision(h, p1, p2);
                 }
+
+                //triangle collision method
                 foreach (Triangle t in triangleList)
                 {
                     b.TriangleCollision(t);
                 }
+
+                //give xp to shooter if kills opponent
                 if (b.shooter == 2)
                 {
                     p2.xp += b.Collision(p1);
@@ -418,6 +504,8 @@ namespace Deop.io
                 {
                     p1.xp += b.Collision(p2);
                 }
+
+                //if bullet runs out of health or hits wall it gets removed
                 if (b.hp <= 0 || b.x < 0 || b.x > this.Width - b.size || b.y < 0 || b.y > this.Height - b.size)
                 {
                     deadBulletList.Add(b);
@@ -426,6 +514,7 @@ namespace Deop.io
 
             foreach (Bot p in botList)
             {
+                //move method for players
                 if (p.playerNumber == 1)
                 {
                     if (leftArrowDown)
@@ -470,6 +559,8 @@ namespace Deop.io
                         p.Move("down", this);
                     }
                 }
+
+                //shape collision methods
                 foreach (Square s in squareList)
                 {
                     p.SquareCollision(s);
@@ -482,6 +573,8 @@ namespace Deop.io
                 {
                     p.TriangleCollision(t);
                 }
+
+                //determine player lvl using xp
                 if (p.xp >= 7500)
                 {
                     p.lvl = 20;
@@ -591,17 +684,17 @@ namespace Deop.io
                 }
             }
 
-
-
-
             foreach (Triangle t in triangleList)
             {
+                //Manhattan distance between triangle and players
                 d1x = (t.x - p1.x);
                 d1y = (t.y - p1.y);
                 d1t = Math.Abs(d1x) + Math.Abs(d1y);
                 d2x = (t.x - p2.x);
                 d2y = (t.y - p2.y);
                 d2t = Math.Abs(d2x) + Math.Abs(d2y);
+
+                //follows closest player
                 if (d2t > d1t)
                 {
                     if (d1x > 20)
@@ -640,6 +733,8 @@ namespace Deop.io
                         t.Move("down");
                     }
                 }
+
+                //shape collision methods
                 foreach (Square s in squareList)
                 {
                     t.SquareCollision(s);
@@ -649,11 +744,13 @@ namespace Deop.io
                     t.HexagonCollision(h);
                 }
 
+                //if runs out of health, it gets removed
                 if (t.hp <= 0)
                 {
                     deadTriangleList.Add(t);
                 }
             }
+
             foreach (Square s in squareList)
             {
                 if (s.hp <= 0)
@@ -668,6 +765,8 @@ namespace Deop.io
                     deadHexagonList.Add(h);
                 }
             }
+
+            //remove dead objects
             foreach (Square s in deadSquareList)
             {
                 squareList.Remove(s);
@@ -685,11 +784,15 @@ namespace Deop.io
                 bulletList.Remove(b);
             }
 
+            //if shooting and has reloaded
             if (spaceDown == true)
             {
                 if (p1CoolDown <= 0)
                 {
+                    //reset shoot cooldown
                     p1CoolDown = p1.reload;
+
+                    //create bullet object in direction of movement
                     if (p1.direction == "left")
                     {
                         Bullet b = new Bullet(p1.x - 15, p1.y + 10, 20, p1.bulletHealth, p1.bulletDamage, p1.bulletSpeed, p1.direction, 1);
@@ -712,6 +815,7 @@ namespace Deop.io
                     }
                 }
             }
+
             if (zDown == true)
             {
                 if (p2CoolDown <= 0)
@@ -738,40 +842,50 @@ namespace Deop.io
                         bulletList.Add(b);
                     }
                 }
-
             }
             
-          
+          //if a player dies
             if (p1.hp <=0)
             {
+                //respawn method
                 p1.Respawn();
+
+                //reset upgrades
                 healthLabel.ForeColor = healthRegenLabel.ForeColor = bodyDamageLabel.ForeColor = bulletSpeedLabel.ForeColor = bulletHealthLabel.ForeColor = bulletDamageLabel.ForeColor = reloadLabel.ForeColor = speedLabel.ForeColor = Color.White;
             }
+
             if (p2.hp <= 0)
             {
                 p2.Respawn();
                 healthTwoLabel.ForeColor = healthRegenTwoLabel.ForeColor = bodyDamageTwoLabel.ForeColor = bulletSpeedTwoLabel.ForeColor = bulletHealthTwoLabel.ForeColor = bulletDamageTwoLabel.ForeColor = reloadTwoLabel.ForeColor = speedTwoLabel.ForeColor = Color.White;
             }
-           
+
+            //if time for health regen
             if (healthRegenCounter == 100)
             {
                 foreach (Bot p in botList)
                 {
+                    //if not at max health
                     if (p.hp < p.maxHealth)
                     {
+                        //will not surpass max health
                         if (p.hp > p.maxHealth - p.healthRegen)
                         {
                             p.hp = p.maxHealth;
                         }
                         else
                         {
+                            //increase health by health regen attribute
                             p.hp += p.healthRegen;
                         }
                     }
                 }
+
+                //reset counter
                 healthRegenCounter = 0;
             }
-            
+
+            //update labels
             health1Label.Text = Convert.ToString(p1.hp) + " hp";
             health2Label.Text = Convert.ToString(p2.hp) + " hp";
             level1Label.Text = "lvl " + Convert.ToString(p1.lvl);
@@ -793,6 +907,8 @@ namespace Deop.io
             {
                 xp2Label.Text = "Max Level: " + Convert.ToString(p1.xp) + " xp";
             }
+
+            //if upgrade possible, show upgrade labels
             if (boost1 == true)
             {
                 healthLabel.Visible = true;
@@ -805,6 +921,7 @@ namespace Deop.io
                 speedLabel.Visible = true;
                 if (keyCoolDown1 < 0)
                 {
+                    //swaps between attributes to upgrade
                     if (mDown == true)
                     {
                         if (attribute1 < 7)
@@ -823,10 +940,13 @@ namespace Deop.io
                             Bold1Label();
                         }
                     }
+                    //selects upgrade
                     if (nDown == true)
                     {
                         keyCoolDown1 = 5;
                         LevelUp(p1, attribute1);
+
+                        //upgrade labels dissapear
                         boost1 = false;
                         healthLabel.Visible = false;
                         healthRegenLabel.Visible = false;
@@ -839,6 +959,7 @@ namespace Deop.io
                     }
                 }
             }
+
             if (boost2 == true)
             {
                 healthTwoLabel.Visible = true;
@@ -883,57 +1004,61 @@ namespace Deop.io
                         reloadTwoLabel.Visible = false;
                         speedTwoLabel.Visible = false;
                     }
-
                 }
             }
 
-
-
-
-
+            //counters count
             p1CoolDown--;
             p2CoolDown--;
             keyCoolDown1--;
             keyCoolDown2--;
+            healthRegenCounter++;
 
+            //clear object removal lists
             deadSquareList.Clear();
             deadTriangleList.Clear();
             deadHexagonList.Clear();
             deadBulletList.Clear();
-
-            healthRegenCounter++;
 
             Refresh();
         }
 
         public void GameScreen_Paint(object sender, PaintEventArgs e)
         {
-            //draw food, mines, and powerups
-
+            //draw objects
             foreach (Square s in squareList)
             {
                 e.Graphics.FillRectangle(s.squareBrush, s.x, s.y, s.size, s.size);
             }
             foreach (Hexagon h in hexagonList)
             {
+                //vertexes
                 d1 = new Point(h.x + 12, h.y);
                 d2 = new Point(h.x + 36, h.y);
-                d3 = new Point(h.x + 48, h.y + 24);
-                d4 = new Point(h.x + 36, h.y + 48);
-                d5 = new Point(h.x + 12, h.y + 48);
+                d3 = new Point(h.x + hexagonSize, h.y + 24);
+                d4 = new Point(h.x + 36, h.y + hexagonSize);
+                d5 = new Point(h.x + 12, h.y + hexagonSize);
                 d6 = new Point(h.x, h.y + 24);
 
+                HexagonArray[0] = d1;
+                HexagonArray[1] = d2;
+                HexagonArray[2] = d3;
+                HexagonArray[3] = d4;
+                HexagonArray[4] = d5;
+                HexagonArray[5] = d6;
 
-                Point[] pointArray = { d1, d2, d3, d4, d5, d6, };
-                e.Graphics.FillPolygon(h.hexagonBrush, pointArray);
+                //draw hexagon using points
+                e.Graphics.FillPolygon(h.hexagonBrush, HexagonArray);
             }
+
             foreach (Bullet b in bulletList)
             {
                 e.Graphics.FillEllipse(b.bulletBrush, new Rectangle(b.x, b.y, b.size, b.size));
             }
+
             foreach (Bot b in botList)
             {
-
+                //draw 'gun' in direction of movement
                 if (b.direction == "right")
                 {
                     e.Graphics.FillRectangle(greyBrush, b.x + b.size - 5, b.y + 10, 20, 20);
@@ -955,38 +1080,43 @@ namespace Deop.io
 
             foreach (Triangle t in triangleList)
             {
+                //triangle tip in direction of movement
                 if (t.direction == "left")
                 {
                     d1 = new Point(t.x, t.y + 11);
-                    d2 = new Point(t.x + 21, t.y);
-                    d3 = new Point(t.x + 21, t.y + 21);
+                    d2 = new Point(t.x + triangleSize, t.y);
+                    d3 = new Point(t.x + triangleSize, t.y + triangleSize);
                 }
                 else if (t.direction == "right")
                 {
                     d1 = new Point(t.x, t.y);
-                    d2 = new Point(t.x + 21, t.y + 11);
-                    d3 = new Point(t.x, t.y + 21);
+                    d2 = new Point(t.x + triangleSize, t.y + 11);
+                    d3 = new Point(t.x, t.y + triangleSize);
                 }
                 else if (t.direction == "down")
                 {
                     d1 = new Point(t.x, t.y);
-                    d2 = new Point(t.x + 21, t.y);
-                    d3 = new Point(t.x + 11, t.y + 21);
+                    d2 = new Point(t.x + triangleSize, t.y);
+                    d3 = new Point(t.x + 11, t.y + triangleSize);
                 }
                 else
                 {
-                    d1 = new Point(t.x, t.y + 21);
+                    d1 = new Point(t.x, t.y + triangleSize);
                     d2 = new Point(t.x + 11, t.y);
-                    d3 = new Point(t.x + 21, t.y + 21);
+                    d3 = new Point(t.x + triangleSize, t.y + triangleSize);
                 }
 
-                Point[] pointArray = { d1, d2, d3 };
-                e.Graphics.FillPolygon(t.triangleBrush, pointArray);
+                triangleArray[0] = d1;
+                triangleArray[1] = d2;
+                triangleArray[2] = d3;
+
+                e.Graphics.FillPolygon(t.triangleBrush, triangleArray);
             }
-            
         }
+
         private void Bold1Label()
         {
+            //reset fonts
             healthLabel.Font = new Font(this.Font, FontStyle.Regular);
             healthRegenLabel.Font = new Font(this.Font, FontStyle.Regular);
             bodyDamageLabel.Font = new Font(this.Font, FontStyle.Regular);
@@ -996,6 +1126,7 @@ namespace Deop.io
             reloadLabel.Font = new Font(this.Font, FontStyle.Regular);
             speedLabel.Font = new Font(this.Font, FontStyle.Regular);
 
+            //bold selected attribute label
             if (attribute1 == 0)
             {
                 healthLabel.Font = new Font(this.Font, FontStyle.Bold);
@@ -1076,15 +1207,20 @@ namespace Deop.io
         }
         private void LevelUp(Bot p, int attribute)
         {
+            //upgrade attribute for specific player
             if (p.playerNumber == 1)
             {
+                //upgrade selected attribute
                 if (attribute == 0)
                 {
+                    //cannot upgrade if label forecolour is red
                     if (healthLabel.ForeColor != Color.Red)
                     {
                         p.hp += 50;
                         p.maxHealth += 50;
                         p.boost++;
+
+                        //if max upgrade make label forecolour red
                         if (p.maxHealth > 375)
                         {
                             healthLabel.ForeColor = Color.Red;
@@ -1125,7 +1261,6 @@ namespace Deop.io
                         {
                             bulletSpeedLabel.ForeColor = Color.Red;
                         }
-
                     }
                 }
                 else if (attribute == 4)
