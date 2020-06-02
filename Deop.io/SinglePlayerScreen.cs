@@ -117,7 +117,7 @@ namespace Deop.io
             squareGenerationSpeed = 300;
 
             //create bot objects with attributes and add them to botList
-            p1 = new Bot(blueBrush, 1, 40, 40, 40, baseMaxHealth, baseDamage, baseSpeed, "none", baseBulletHealth, baseBulletDamage, baseBulletSpeed, baseReload, baseRegen, baseMaxHealth, 1, 5000, 0);
+            p1 = new Bot(blueBrush, 1, 40, 40, 40, baseMaxHealth, baseDamage, baseSpeed, "none", baseBulletHealth, baseBulletDamage, baseBulletSpeed, baseReload, baseRegen, baseMaxHealth, 1, 0, 0);
             botList.Add(p1);
             p2 = new Bot(redBrush, 2, 1520, 40, 40, baseMaxHealth, baseDamage, baseSpeed, "none", baseBulletHealth, baseBulletDamage, baseBulletSpeed, baseReload, 0, baseMaxHealth, 1, 0, 0);
             botList.Add(p2);
