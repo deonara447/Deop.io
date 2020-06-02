@@ -336,38 +336,44 @@ namespace Deop.io
             //if player reaches winning XP
             if (p1.xp >= 8000)
             {
-                //stop game
-                gameLoop.Enabled = false;
-
-                //play sound
-                gameOver.PlaySync();
-
-                //go to main screen
-                MainScreen ms = new MainScreen();
                 Form f = this.FindForm();
-                ms.Location = new Point((f.Width - ms.Width) / 2, (f.Height - ms.Height) / 2);
-                f.Controls.Remove(this);
-                ms.Size = f.Size;
-                f.Controls.Add(ms);
-                ms.Focus();
+                if (f != null)
+                {
+                    //stop game
+                    gameLoop.Enabled = false;
 
-                //display winner
-                ms.Winner(1);
+                    //play sound
+                    gameOver.PlaySync();
+
+                    //go to main screen
+                    MainScreen ms = new MainScreen();
+                    ms.Location = new Point((f.Width - ms.Width) / 2, (f.Height - ms.Height) / 2);
+                    f.Controls.Remove(this);
+                    ms.Size = f.Size;
+                    f.Controls.Add(ms);
+                    ms.Focus();
+
+                    //display winner
+                    ms.Winner(1);
+                }
             }
             if (p2.xp >= 8000)
             {
-                gameLoop.Enabled = false;
-
-                gameOver.PlaySync();
-
-                MainScreen ms = new MainScreen();
                 Form f = this.FindForm();
-                ms.Location = new Point((f.Width - ms.Width) / 2, (f.Height - ms.Height) / 2);
-                f.Controls.Remove(this);
-                ms.Size = f.Size;
-                f.Controls.Add(ms);
-                ms.Focus();
-                ms.Winner(2);
+                if (f != null)
+                {
+                    gameLoop.Enabled = false;
+
+                    gameOver.PlaySync();
+
+                    MainScreen ms = new MainScreen();
+                    ms.Location = new Point((f.Width - ms.Width) / 2, (f.Height - ms.Height) / 2);
+                    f.Controls.Remove(this);
+                    ms.Size = f.Size;
+                    f.Controls.Add(ms);
+                    ms.Focus();
+                    ms.Winner(2);
+                }
             }
 
             //check if can upgrade attribute 
