@@ -21,18 +21,30 @@ namespace Deop.io
 
         //location of shapes
         int shapeX, shapeY;
+
+        //shape sizes
         int squareSize = 30;
         int triangleSize = 21;
         int hexagonSize = 48;
+
+        //if shape will be added
         Boolean addShape;
+
+        //speed of shape generation
         int squareGenerationSpeed;
+
+        //shape health and damage
         int squareHp = 10;
         int squareDamage = 10;
         int hexagonHp = 100;
         int hexagonDamage = 10;
         int triangleHp = 20;
         int triangleDamage = 20;
+
+        //when health regen occurs
         int healthRegenCounter;
+
+        //base bot attributes
         int baseMaxHealth = 150;
         int baseDamage = 9;
         int baseSpeed = 3;
@@ -42,35 +54,45 @@ namespace Deop.io
         int baseReload = 40;
         int baseRegen = 5;
 
-
+        //what attribute is being upgraded
         int attribute;
 
+        //interval between key presses
         int keyCoolDown;
 
-
+        //xp to next lvl upgrade
         int lvlUpgrade;
 
+        //for drawing shapes
         Point d1, d2, d3, d4, d5, d6;
 
+        //for drawing shapes
         public SolidBrush blueBrush = new SolidBrush(Color.DeepSkyBlue);
         public SolidBrush redBrush = new SolidBrush(Color.Red);
         public SolidBrush greyBrush = new SolidBrush(Color.Gray);
 
+        //object lists
         List<Square> squareList = new List<Square>();
         List<Hexagon> hexagonList = new List<Hexagon>();
         List<Triangle> triangleList = new List<Triangle>();
         List<Bullet> bulletList = new List<Bullet>();
         List<Bot> botList = new List<Bot>();
+
+        //list of objects to be removed
         List<Square> deadSquareList = new List<Square>();
         List<Hexagon> deadHexagonList = new List<Hexagon>();
         List<Triangle> deadTriangleList = new List<Triangle>();
         List<Bullet> deadBulletList = new List<Bullet>();
+
+        //bot objects
         Bot p1, p2, p3, p4;
+
+        //for checking collisions
         Rectangle newSquare;
         Rectangle r;
 
+        //if time for upgrade
         Boolean boost;
-
 
         //random number generator
         Random randGen = new Random();
@@ -78,13 +100,14 @@ namespace Deop.io
         {
             InitializeComponent();
             OnStart();
-            p1.hp = 150;
         }
         public void OnStart()
         {
-            boost = false;
-            keyCoolDown = attribute = 0;
-            healthRegenCounter = 0;
+            //reset variables
+            keyCoolDown = attribute = healthRegenCounter = 0;
+            squareGenerationSpeed = 300;
+
+            //create bot objects with attributes and add them to botList
             p1 = new Bot(blueBrush, 1, 40, 40, 40, baseMaxHealth, baseDamage, baseSpeed, "none", baseBulletHealth, baseBulletDamage, baseBulletSpeed, baseReload, baseRegen, baseMaxHealth, 1, 0, 0);
             botList.Add(p1);
             p2 = new Bot(redBrush, 2, 1520, 40, 40, baseMaxHealth, baseDamage, baseSpeed, "none", baseBulletHealth, baseBulletDamage, baseBulletSpeed, baseReload, 0, baseMaxHealth, 1, 0, 0);
@@ -93,64 +116,77 @@ namespace Deop.io
             botList.Add(p3);
             p4 = new Bot(redBrush, 4, 1520, 820, 40, baseMaxHealth, baseDamage, baseSpeed, "none", baseBulletHealth, baseBulletDamage, baseBulletSpeed, baseReload, 0, baseMaxHealth, 1, 0, 0);
             botList.Add(p4);
-            p1CoolDown = p1.reload;
-            p2CoolDown = p2.reload;
 
-            squareGenerationSpeed = 300;
+            //create 20 squares
             for (int i = 0; i <= 20; i++)
             {
                 addShape = true;
+
+                //random location
                 shapeX = randGen.Next(1, 1600 - squareSize - 1);
                 shapeY = randGen.Next(1, 900 - squareSize - 1);
                 newSquare = new Rectangle(shapeX, shapeY, squareSize, squareSize);
 
+                //check to see if collision with a square
                 foreach (Square s in squareList)
                 {
                     r = new Rectangle(s.x - 1, s.y - 1, s.size + 1, s.size + 1);
+
                     if (r.IntersectsWith(newSquare))
                     {
                         addShape = false;
                     }
                 }
+
+                //if not colliding, add shape
                 if (addShape == true)
                 {
                     Square f = new Square(shapeX, shapeY, squareSize, squareHp, squareDamage);
                     squareList.Add(f);
                 }
             }
+
             addShape = true;
+
+            //create 5 hexagons
             for (int i = 0; i <= 5; i++)
             {
                 shapeX = randGen.Next(1, 1600 - hexagonSize - 1);
                 shapeY = randGen.Next(1, 900 - hexagonSize - 1);
-
                 newSquare = new Rectangle(shapeX, shapeY, hexagonSize, hexagonSize);
 
+                //check to see if collision with a square
                 foreach (Square s in squareList)
                 {
                     r = new Rectangle(s.x - 1, s.y - 1, s.size + 1, s.size + 1);
+
                     if (r.IntersectsWith(newSquare))
                     {
                         addShape = false;
                     }
                 }
 
+                //check to see if collision with a hexagon
                 foreach (Hexagon h in hexagonList)
                 {
                     r = new Rectangle(h.x - 1, h.y - 1, h.size + 1, h.size + 1);
+
                     if (r.IntersectsWith(newSquare))
                     {
                         addShape = false;
                     }
                 }
+
                 if (addShape == true)
                 {
                     Hexagon f = new Hexagon(shapeX, shapeY, hexagonSize, hexagonHp, hexagonDamage);
                     hexagonList.Add(f);
                 }
+
                 gameLoop.Enabled = true;
             }
         }
+
         private void GameScreen_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             //if key is pressed boolean is true
@@ -181,6 +217,7 @@ namespace Deop.io
                     spaceDown = true;
                     break;
                 case Keys.Escape:
+                    //return to main screen
                     MainScreen ms = new MainScreen();
                     Form f = this.FindForm();
                     ms.Location = new Point((f.Width - ms.Width) / 2, (f.Height - ms.Height) / 2);
@@ -223,36 +260,45 @@ namespace Deop.io
                     break;
             }
         }
+
         private void gameLoop_Tick(object sender, EventArgs e)
         {
+            //each timer tick
+            //check if can upgrade attribute 
             if (p1.boost != p1.lvl)
             {
                 boost = true;
             }
+
+            //shape generation (same as OnStart)
             addShape = true;
+
             if (randGen.Next(1, squareGenerationSpeed) < 7)
             {
                 shapeX = randGen.Next(1, this.Width - squareSize - 1);
                 shapeY = randGen.Next(1, this.Height - squareSize - 1);
-
                 newSquare = new Rectangle(shapeX, shapeY, squareSize, squareSize);
 
                 foreach (Square s in squareList)
                 {
                     r = new Rectangle(s.x - 1, s.y - 1, s.size + 1, s.size + 1);
+
                     if (r.IntersectsWith(newSquare))
                     {
                         addShape = false;
                     }
                 }
+
                 foreach (Hexagon h in hexagonList)
                 {
                     r = new Rectangle(h.x - 1, h.y - 1, h.size + 1, h.size + 1);
+
                     if (r.IntersectsWith(newSquare))
                     {
                         addShape = false;
                     }
                 }
+
                 if (addShape == true)
                 {
                     Square f = new Square(shapeX, shapeY, squareSize, squareHp, squareDamage);
@@ -263,12 +309,12 @@ namespace Deop.io
             {
                 shapeX = randGen.Next(1, this.Width - hexagonSize - 1);
                 shapeY = randGen.Next(1, this.Height - hexagonSize - 1);
-
                 newSquare = new Rectangle(shapeX, shapeY, hexagonSize, hexagonSize);
 
                 foreach (Square s in squareList)
                 {
                     r = new Rectangle(s.x - 1, s.y - 1, s.size + 1, s.size + 1);
+
                     if (r.IntersectsWith(newSquare))
                     {
                         addShape = false;
@@ -278,16 +324,19 @@ namespace Deop.io
                 foreach (Hexagon h in hexagonList)
                 {
                     r = new Rectangle(h.x - 1, h.y - 1, h.size + 1, h.size + 1);
+
                     if (r.IntersectsWith(newSquare))
                     {
                         addShape = false;
                     }
                 }
+
                 if (addShape == true)
                 {
                     Hexagon f = new Hexagon(shapeX, shapeY, hexagonSize, hexagonHp, hexagonDamage);
                     hexagonList.Add(f);
-                    //later add to pentagon gen
+                    
+                    //increase shape generation speed
                     if (squareGenerationSpeed > 100)
                     {
                         squareGenerationSpeed -= 3;
@@ -298,12 +347,12 @@ namespace Deop.io
             {
                 shapeX = randGen.Next(1, this.Width - triangleSize - 1);
                 shapeY = randGen.Next(1, this.Height - triangleSize - 1);
-
                 newSquare = new Rectangle(shapeX, shapeY, triangleSize, triangleSize);
 
                 foreach (Square s in squareList)
                 {
                     r = new Rectangle(s.x - 1, s.y - 1, s.size + 1, s.size + 1);
+
                     if (r.IntersectsWith(newSquare))
                     {
                         addShape = false;
@@ -323,31 +372,43 @@ namespace Deop.io
                     triangleList.Add(t);
                 }
             }
+
+            //check for collision between player and bots
             p1.Collision(p2);
             p1.Collision(p3);
             p1.Collision(p4);
 
             foreach (Bullet b in bulletList)
             {
+                //bullet move method
                 b.Move(b.direction);
+
+                //square collision method
                 foreach (Square s in squareList)
                 {
                     b.SquareCollision(s, p1, p2);
                 }
+
+                //hexagon collision method
                 foreach (Hexagon h in hexagonList)
                 {
                     b.HexagonCollision(h, p1, p2);
                 }
+
+                //triangle collision method
                 foreach (Triangle t in triangleList)
                 {
                     b.TriangleCollision(t);
                 }
+
+                //check to see if opponent bullet collides with player
                 if (b.shooter != 1)
                 {
                     b.Collision(p1);
                 }
                 else
                 {
+                    //if bot dies give player xp
                     if (b.Collision(p2) != 0)
                     {
                         p1.xp += 50 * p2.lvl;
@@ -361,6 +422,8 @@ namespace Deop.io
                         p1.xp += 50 * p4.lvl;
                     }
                 }
+
+                //if bullet hits wall or runs out of health, it gets removed
                 if (b.hp <= 0 || b.x < 0 || b.x > this.Width - b.size || b.y < 0 || b.y > this.Height - b.size)
                 {
                     deadBulletList.Add(b);
@@ -369,6 +432,7 @@ namespace Deop.io
 
             foreach (Bot p in botList)
             {
+                //move method for player
                 if (p.playerNumber == 1)
                 {
                     if (leftArrowDown)
@@ -391,6 +455,8 @@ namespace Deop.io
                         p.Move("down", this);
                     }
                 }
+
+                //bots move toward player
                 else
                 {
                     if (p.y > p1.y + 10)
@@ -410,6 +476,8 @@ namespace Deop.io
                         p.Move("right", this);
                     }
                 }
+
+                //shape collision methods
                 foreach (Square s in squareList)
                 {
                     p.SquareCollision(s);
@@ -423,6 +491,8 @@ namespace Deop.io
                     p.TriangleCollision(t);
                 }
             }
+
+            //determine player lvl using xp
             if (p1.xp >= 7500)
             {
                 p1.lvl = 20;
@@ -523,9 +593,10 @@ namespace Deop.io
                 p1.lvl = 1;
             }
 
+
             foreach (Triangle t in triangleList)
             {
-
+                //triangle moves toward player
                 if (t.x > p1.x + 10)
                 {
                     t.Move("left");
@@ -543,6 +614,7 @@ namespace Deop.io
                     t.Move("down");
                 }
 
+                //shape collision methods
                 foreach (Square s in squareList)
                 {
                     t.SquareCollision(s);
@@ -552,6 +624,7 @@ namespace Deop.io
                     t.HexagonCollision(h);
                 }
 
+                //if runs out of health, it gets removed
                 if (t.hp <= 0)
                 {
                     deadTriangleList.Add(t);
@@ -572,6 +645,8 @@ namespace Deop.io
                     deadHexagonList.Add(h);
                 }
             }
+
+            //remove dead objects
             foreach (Square s in deadSquareList)
             {
                 squareList.Remove(s);
@@ -589,11 +664,15 @@ namespace Deop.io
                 bulletList.Remove(b);
             }
 
+            //if shooting and has reloaded
             if (spaceDown == true)
             {
                 if (p1CoolDown <= 0)
                 {
+                    //reset shoot cooldown
                     p1CoolDown = p1.reload;
+
+                    //create bullet object in direction of movement
                     if (p1.direction == "left")
                     {
                         Bullet b = new Bullet(p1.x - 15, p1.y + 10, 20, p1.bulletHealth, p1.bulletDamage, p1.bulletSpeed, p1.direction, p1.playerNumber);
@@ -609,14 +688,15 @@ namespace Deop.io
                         Bullet b = new Bullet(p1.x + 10, p1.y + p1.size - 5, 20, p1.bulletHealth, p1.bulletDamage, p1.bulletSpeed, p1.direction, p1.playerNumber);
                         bulletList.Add(b);
                     }
-                    else if (p1.direction == "up")
+                    else
                     {
                         Bullet b = new Bullet(p1.x + 10, p1.y - 15, 20, p1.bulletHealth, p1.bulletDamage, p1.bulletSpeed, p1.direction, p1.playerNumber);
                         bulletList.Add(b);
                     }
                 }
             }
-
+            
+            //if reloaded bots shoot in direction of movement
             if (p2CoolDown <= 0)
             {
                 p2CoolDown = p2.reload;
@@ -635,7 +715,7 @@ namespace Deop.io
                     Bullet b = new Bullet(p2.x + 10, p2.y + p2.size - 5, 20, p2.bulletHealth, p2.bulletDamage, p2.bulletSpeed, p2.direction, p2.playerNumber);
                     bulletList.Add(b);
                 }
-                else if (p2.direction == "up")
+                else
                 {
                     Bullet b = new Bullet(p2.x + 10, p2.y - 15, 20, p2.bulletHealth, p2.bulletDamage, p2.bulletSpeed, p2.direction, p2.playerNumber);
                     bulletList.Add(b);
@@ -659,7 +739,7 @@ namespace Deop.io
                     Bullet b = new Bullet(p3.x + 10, p3.y + p3.size - 5, 20, p3.bulletHealth, p3.bulletDamage, p3.bulletSpeed, p3.direction, p3.playerNumber);
                     bulletList.Add(b);
                 }
-                else if (p3.direction == "up")
+                else
                 {
                     Bullet b = new Bullet(p3.x + 10, p3.y - 15, 20, p3.bulletHealth, p3.bulletDamage, p3.bulletSpeed, p3.direction, p3.playerNumber);
                     bulletList.Add(b);
@@ -683,32 +763,35 @@ namespace Deop.io
                     Bullet b = new Bullet(p4.x + 10, p4.y + p4.size - 5, 20, p4.bulletHealth, p4.bulletDamage, p4.bulletSpeed, p4.direction, p4.playerNumber);
                     bulletList.Add(b);
                 }
-                else if (p4.direction == "up")
+                else
                 {
                     Bullet b = new Bullet(p4.x + 10, p4.y - 15, 20, p4.bulletHealth, p4.bulletDamage, p4.bulletSpeed, p4.direction, p4.playerNumber);
                     bulletList.Add(b);
                 }
             }
 
-
+            //if run out of health
             if (p1.hp <= 0)
             {
                 Form z = FindForm();
+
                 if (z != null)
                 {
+                    //switch to high score screen
                     gameLoop.Enabled = false;
                     HighScoreScreen hss = new HighScoreScreen();
-                    this.Focus();
-                    this.Refresh();
                     hss.Location = new Point((z.Width - hss.Width) / 2, (z.Height - hss.Height) / 2);
                     z.Controls.Remove(this);
                     hss.Size = z.Size;
                     z.Controls.Add(hss);
                     hss.Focus();
+
+                    //transfer high score
                     hss.Results(p1.xp);
                 }
-                
             }
+
+            //if bots die, they respawn with an improved attribute
             if (p2.hp <= 0)
             {
                 p1.xp += p2.lvl * 50;
@@ -731,25 +814,32 @@ namespace Deop.io
                 p4.BotRespawn(randGen.Next(0, 8));
             }
 
+            //if time for health regen
             if (healthRegenCounter == 100)
             {
                 foreach (Bot p in botList)
                 {
+                    //if not at max health
                     if (p.hp < p.maxHealth)
                     {
+                        //will not surpass max health
                         if (p.hp > p.maxHealth - p.healthRegen)
                         {
                             p.hp = p.maxHealth;
                         }
                         else
                         {
+                            //increase health by health regen attribute
                             p.hp += p.healthRegen;
                         }
                     }
                 }
+
+                //reset counter
                 healthRegenCounter = 0;
             }
 
+            //update labels
             health1Label.Text = Convert.ToString(p1.hp) + " hp";
             level1Label.Text = "lvl " + Convert.ToString(p1.lvl);
 
@@ -762,6 +852,7 @@ namespace Deop.io
                 xp1Label.Text = "Max Level: " + Convert.ToString(p1.xp) + " xp";
             }
 
+            //if upgrade possible, show upgrade labels
             if (boost == true)
             {
                 healthLabel.Visible = true;
@@ -772,8 +863,10 @@ namespace Deop.io
                 bulletDamageLabel.Visible = true;
                 reloadLabel.Visible = true;
                 speedLabel.Visible = true;
+
                 if (keyCoolDown < 0)
                 {
+                    //swaps between attributes to upgrade
                     if (mDown == true)
                     {
                         if (attribute < 7)
@@ -792,10 +885,14 @@ namespace Deop.io
                             BoldLabel();
                         }
                     }
+
+                    //selects upgrade
                     if (nDown == true)
                     {
                         keyCoolDown = 5;
                         LevelUp();
+
+                        //upgrade labels dissapear
                         boost = false;
                         healthLabel.Visible = false;
                         healthRegenLabel.Visible = false;
@@ -808,25 +905,29 @@ namespace Deop.io
                     }
                 }
             }
+            //bots do not have xp
             p2.xp = p3.xp = p4.xp = 0;
 
+            //counters count
             p1CoolDown--;
             p2CoolDown--;
             p3CoolDown--;
             p4CoolDown--;
             keyCoolDown--;
+            healthRegenCounter++;
 
+            //clear object removal lists
             deadSquareList.Clear();
             deadTriangleList.Clear();
             deadHexagonList.Clear();
             deadBulletList.Clear();
-
-            healthRegenCounter++;
+           
             Refresh();
         }
+
         public void GameScreen_Paint(object sender, PaintEventArgs e)
         {
-            //draw food, mines, and powerups
+            //draw objects
             foreach (Square s in squareList)
             {
                 e.Graphics.FillRectangle(s.squareBrush, s.x, s.y, s.size, s.size);
@@ -850,6 +951,7 @@ namespace Deop.io
             }
             foreach (Bot b in botList)
             {
+                //draw 'gun; in direction of movement
                 if (b.direction == "right")
                 {
                     e.Graphics.FillRectangle(greyBrush, b.x + b.size - 5, b.y + 10, 20, 20);
@@ -871,6 +973,7 @@ namespace Deop.io
 
             foreach (Triangle t in triangleList)
             {
+                //triangle tip in direction of movement
                 if (t.direction == "left")
                 {
                     d1 = new Point(t.x, t.y + 11);
@@ -902,6 +1005,7 @@ namespace Deop.io
         }
         private void BoldLabel()
         {
+            //reset fonts
             healthLabel.Font = new Font(this.Font, FontStyle.Regular);
             healthRegenLabel.Font = new Font(this.Font, FontStyle.Regular);
             bodyDamageLabel.Font = new Font(this.Font, FontStyle.Regular);
@@ -911,6 +1015,7 @@ namespace Deop.io
             reloadLabel.Font = new Font(this.Font, FontStyle.Regular);
             speedLabel.Font = new Font(this.Font, FontStyle.Regular);
 
+            //bold selected attribute label
             if (attribute == 0)
             {
                 healthLabel.Font = new Font(this.Font, FontStyle.Bold);
@@ -945,16 +1050,19 @@ namespace Deop.io
             }
         }
 
-
         private void LevelUp()
         {
+            //upgrade selected attribute
             if (attribute == 0)
             {
+                //cannot upgrade if label forecolour is red
                 if (healthLabel.ForeColor != Color.Red)
                 {
                     p1.hp += 50;
                     p1.maxHealth += 50;
                     p1.boost++;
+
+                    //if max upgrade make label forecolour red
                     if (p1.maxHealth > 375)
                     {
                         healthLabel.ForeColor = Color.Red;
@@ -995,7 +1103,6 @@ namespace Deop.io
                     {
                         bulletSpeedLabel.ForeColor = Color.Red;
                     }
-
                 }
             }
             else if (attribute == 4)
@@ -1047,6 +1154,5 @@ namespace Deop.io
                 }
             }
         }
-
     }
 }
