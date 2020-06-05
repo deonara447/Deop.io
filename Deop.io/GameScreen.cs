@@ -343,8 +343,12 @@ namespace Deop.io
                     gameLoop.Enabled = false;
 
                     //play sound
-                    gameOver.PlaySync();
+                    gameOver.Play();
 
+                    //2s pause
+                    this.Refresh();
+                    Thread.Sleep(2000);
+                    
                     //go to main screen
                     MainScreen ms = new MainScreen();
                     ms.Location = new Point((f.Width - ms.Width) / 2, (f.Height - ms.Height) / 2);
@@ -355,6 +359,7 @@ namespace Deop.io
 
                     //display winner
                     ms.Winner(1);
+
                 }
             }
             if (p2.xp >= 8000)

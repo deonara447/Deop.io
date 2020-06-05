@@ -170,7 +170,7 @@
             // yourPlace
             // 
             this.yourPlace.Font = new System.Drawing.Font("Segoe UI", 18F);
-            this.yourPlace.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.yourPlace.ForeColor = System.Drawing.Color.Red;
             this.yourPlace.Location = new System.Drawing.Point(3, 371);
             this.yourPlace.Name = "yourPlace";
             this.yourPlace.Size = new System.Drawing.Size(122, 68);
@@ -183,7 +183,7 @@
             // 
             this.yourName1.BackColor = System.Drawing.Color.Transparent;
             this.yourName1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.875F, System.Drawing.FontStyle.Bold);
-            this.yourName1.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.yourName1.ForeColor = System.Drawing.Color.Red;
             this.yourName1.Location = new System.Drawing.Point(330, 371);
             this.yourName1.Name = "yourName1";
             this.yourName1.Size = new System.Drawing.Size(36, 68);
@@ -195,7 +195,7 @@
             // yourScore
             // 
             this.yourScore.Font = new System.Drawing.Font("Segoe UI", 18F);
-            this.yourScore.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.yourScore.ForeColor = System.Drawing.Color.Red;
             this.yourScore.Location = new System.Drawing.Point(763, 371);
             this.yourScore.Name = "yourScore";
             this.yourScore.Size = new System.Drawing.Size(291, 68);
@@ -208,7 +208,7 @@
             // 
             this.yourName2.BackColor = System.Drawing.Color.Transparent;
             this.yourName2.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.875F);
-            this.yourName2.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.yourName2.ForeColor = System.Drawing.Color.Red;
             this.yourName2.Location = new System.Drawing.Point(364, 371);
             this.yourName2.Name = "yourName2";
             this.yourName2.Size = new System.Drawing.Size(36, 68);
@@ -221,7 +221,7 @@
             // 
             this.yourName3.BackColor = System.Drawing.Color.Transparent;
             this.yourName3.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.875F);
-            this.yourName3.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.yourName3.ForeColor = System.Drawing.Color.Red;
             this.yourName3.Location = new System.Drawing.Point(400, 371);
             this.yourName3.Name = "yourName3";
             this.yourName3.Size = new System.Drawing.Size(36, 68);
