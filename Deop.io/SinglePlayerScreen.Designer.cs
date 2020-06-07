@@ -49,7 +49,7 @@
             this.speedLabel.ForeColor = System.Drawing.Color.White;
             this.speedLabel.Location = new System.Drawing.Point(1093, 0);
             this.speedLabel.Name = "speedLabel";
-            this.speedLabel.Size = new System.Drawing.Size(156, 44);
+            this.speedLabel.Size = new System.Drawing.Size(156, 60);
             this.speedLabel.TabIndex = 21;
             this.speedLabel.Text = "Speed";
             this.speedLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -60,7 +60,7 @@
             this.reloadLabel.ForeColor = System.Drawing.Color.White;
             this.reloadLabel.Location = new System.Drawing.Point(937, 0);
             this.reloadLabel.Name = "reloadLabel";
-            this.reloadLabel.Size = new System.Drawing.Size(156, 44);
+            this.reloadLabel.Size = new System.Drawing.Size(156, 60);
             this.reloadLabel.TabIndex = 20;
             this.reloadLabel.Text = "Reload";
             this.reloadLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -71,7 +71,7 @@
             this.bulletDamageLabel.ForeColor = System.Drawing.Color.White;
             this.bulletDamageLabel.Location = new System.Drawing.Point(781, 0);
             this.bulletDamageLabel.Name = "bulletDamageLabel";
-            this.bulletDamageLabel.Size = new System.Drawing.Size(156, 44);
+            this.bulletDamageLabel.Size = new System.Drawing.Size(156, 60);
             this.bulletDamageLabel.TabIndex = 19;
             this.bulletDamageLabel.Text = "Bullet Damage";
             this.bulletDamageLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -82,7 +82,7 @@
             this.bulletSpeedLabel.ForeColor = System.Drawing.Color.White;
             this.bulletSpeedLabel.Location = new System.Drawing.Point(469, 0);
             this.bulletSpeedLabel.Name = "bulletSpeedLabel";
-            this.bulletSpeedLabel.Size = new System.Drawing.Size(156, 44);
+            this.bulletSpeedLabel.Size = new System.Drawing.Size(156, 60);
             this.bulletSpeedLabel.TabIndex = 18;
             this.bulletSpeedLabel.Text = "Bullet Speed";
             this.bulletSpeedLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -93,7 +93,7 @@
             this.bulletHealthLabel.ForeColor = System.Drawing.Color.White;
             this.bulletHealthLabel.Location = new System.Drawing.Point(625, 0);
             this.bulletHealthLabel.Name = "bulletHealthLabel";
-            this.bulletHealthLabel.Size = new System.Drawing.Size(156, 44);
+            this.bulletHealthLabel.Size = new System.Drawing.Size(156, 60);
             this.bulletHealthLabel.TabIndex = 17;
             this.bulletHealthLabel.Text = "Bullet Health";
             this.bulletHealthLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -104,7 +104,7 @@
             this.bodyDamageLabel.ForeColor = System.Drawing.Color.White;
             this.bodyDamageLabel.Location = new System.Drawing.Point(313, 0);
             this.bodyDamageLabel.Name = "bodyDamageLabel";
-            this.bodyDamageLabel.Size = new System.Drawing.Size(156, 44);
+            this.bodyDamageLabel.Size = new System.Drawing.Size(156, 60);
             this.bodyDamageLabel.TabIndex = 16;
             this.bodyDamageLabel.Text = "Body Damage";
             this.bodyDamageLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -115,7 +115,7 @@
             this.healthRegenLabel.ForeColor = System.Drawing.Color.White;
             this.healthRegenLabel.Location = new System.Drawing.Point(157, 0);
             this.healthRegenLabel.Name = "healthRegenLabel";
-            this.healthRegenLabel.Size = new System.Drawing.Size(156, 44);
+            this.healthRegenLabel.Size = new System.Drawing.Size(156, 60);
             this.healthRegenLabel.TabIndex = 15;
             this.healthRegenLabel.Text = "Health Regen";
             this.healthRegenLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -127,7 +127,7 @@
             this.healthLabel.ForeColor = System.Drawing.Color.White;
             this.healthLabel.Location = new System.Drawing.Point(1, 0);
             this.healthLabel.Name = "healthLabel";
-            this.healthLabel.Size = new System.Drawing.Size(156, 44);
+            this.healthLabel.Size = new System.Drawing.Size(156, 60);
             this.healthLabel.TabIndex = 14;
             this.healthLabel.Text = "Health";
             this.healthLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
