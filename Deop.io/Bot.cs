@@ -249,8 +249,8 @@ namespace Deop.io
         public void HexagonCollision(Hexagon h)
         {
             //circle-circle collsion detection
-            var dx = x - h.x;
-            var dy = y - h.y;
+            var dx = x - h.x - 4;
+            var dy = y - h.y - 4;
             var distance = Math.Sqrt(dx * dx + dy * dy);
 
             if (distance < size / 2 + h.size / 2)

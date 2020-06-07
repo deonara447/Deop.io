@@ -609,15 +609,15 @@ namespace Deop.io
             foreach (Triangle t in triangleList)
             {
                 //triangle moves towards player
-                if (t.x > p1.x + 10)
+                if (t.x - p1.x > 13)
                 {
                     t.Move("left");
                 }
-                else if (t.x < p1.x - 10)
+                else if (t.x - p1.x < 7)
                 {
                     t.Move("right");
                 }
-                else if (t.y > p1.y + 10)
+                else if (t.y - p1.y > 10)
                 {
                     t.Move("up");
                 }

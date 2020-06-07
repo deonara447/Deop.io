@@ -145,8 +145,8 @@ namespace Deop.io
         public void HexagonCollision(Hexagon h, Bot p1, Bot p2)
         {
             //hexagon-bullet collision detection
-            var dx = x - h.x;
-            var dy = y - h.y;
+            var dx = x + (size/2) - h.x - (h.size/2);
+            var dy = y + (size / 2) - h.y - (h.size / 2);
             var distance = Math.Sqrt(dx * dx + dy * dy);
 
             if (distance < size / 2 + h.size / 2)

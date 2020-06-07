@@ -724,11 +724,11 @@ namespace Deop.io
                 //follows closest player
                 if (d2t > d1t)
                 {
-                    if (d1x > 20)
+                    if (d1x > 13)
                     {
                         t.Move("left");
                     }
-                    else if (d1x < 0)
+                    else if (d1x < 7)
                     {
                         t.Move("right");
                     }
@@ -743,11 +743,11 @@ namespace Deop.io
                 }
                 else
                 {
-                    if (d2x > 20)
+                    if (d2x > 13)
                     {
                         t.Move("left");
                     }
-                    else if (d2x < 0)
+                    else if (d2x < 7)
                     {
                         t.Move("right");
                     }
