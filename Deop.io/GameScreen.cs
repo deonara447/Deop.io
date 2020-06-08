@@ -348,18 +348,18 @@ namespace Deop.io
                     //2s pause
                     this.Refresh();
                     Thread.Sleep(2000);
-                    
+
                     //go to main screen
+                    f.Controls.Remove(this);
                     MainScreen ms = new MainScreen();
                     ms.Location = new Point((f.Width - ms.Width) / 2, (f.Height - ms.Height) / 2);
-                    f.Controls.Remove(this);
                     ms.Size = f.Size;
                     f.Controls.Add(ms);
                     ms.Focus();
 
                     //display winner
                     ms.Winner(1);
-
+                    return;
                 }
             }
             if (p2.xp >= 8000)
@@ -369,7 +369,10 @@ namespace Deop.io
                 {
                     gameLoop.Enabled = false;
 
-                    gameOver.PlaySync();
+                    gameOver.Play();
+
+                    this.Refresh();
+                    Thread.Sleep(2000);
 
                     MainScreen ms = new MainScreen();
                     ms.Location = new Point((f.Width - ms.Width) / 2, (f.Height - ms.Height) / 2);

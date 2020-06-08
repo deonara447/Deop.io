@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.Threading;
 using System.Media;
+using System.Diagnostics;
 
 namespace Deop.io
 {
@@ -29,9 +30,18 @@ namespace Deop.io
         //sound
         SoundPlayer highScore = new SoundPlayer(Properties.Resources.highScore);
 
+        //stopwatch
+        Stopwatch myWatch = new Stopwatch();
+
+        //if focused on this screen
+        Boolean focus = true;
+
         public HighScoreScreen()
         {
             InitializeComponent();
+
+            //start watch
+            myWatch.Start();
         }
 
         private void HighScoreScreen_Load(object sender, EventArgs e)
@@ -118,46 +128,56 @@ namespace Deop.io
                     Application.Exit();
                     break;
                 case Keys.Space:
-                    try
+                    //if focused on screen or enough time has passed
+                    if (myWatch.ElapsedMilliseconds > 2000 || focus == true)
                     {
-                        //if saving high score
-                        //add new high score object (your initials, your score)
-                        scores.Remove(hs);
-                        hs = new HighScore(yourName1.Text + yourName2.Text + yourName3.Text, Convert.ToInt16(yourScore.Text));
-                        scores.Add(hs);
-                        scores = scores.OrderByDescending(x => x.score).ToList();
+                        //stop watch
+                        myWatch.Stop();
 
-                        List<string> tempList = new List<string>();
-
-                        // Add all info from each HighScore object to temp list 
-                        foreach (HighScore hs in scores)
+                        try
                         {
-                            tempList.Add(hs.name);
-                            tempList.Add(Convert.ToString(hs.score));
+                            //if saving high score
+                            //add new high score object (your initials, your score)
+                            scores.Remove(hs);
+                            hs = new HighScore(yourName1.Text + yourName2.Text + yourName3.Text, Convert.ToInt16(yourScore.Text));
+                            scores.Add(hs);
+                            scores = scores.OrderByDescending(x => x.score).ToList();
+
+                            List<string> tempList = new List<string>();
+
+                            // Add all info from each HighScore object to temp list 
+                            foreach (HighScore hs in scores)
+                            {
+                                tempList.Add(hs.name);
+                                tempList.Add(Convert.ToString(hs.score));
+                            }
+
+                            //upload updated scores to text file
+                            File.WriteAllLines("Score.txt", tempList);
+                        }
+                        catch
+                        {
+                            //if viewing high scores
                         }
 
-                        //upload updated scores to text file
-                        File.WriteAllLines("Score.txt", tempList);
+                        //return to main screen
+                        MainScreen ms = new MainScreen();
+                        Form f = this.FindForm();
+                        ms.Location = new Point((f.Width - ms.Width) / 2, (f.Height - ms.Height) / 2);
+                        f.Controls.Remove(this);
+                        ms.Size = f.Size;
+                        f.Controls.Add(ms);
+                        ms.Focus();
                     }
-                    catch
-                    {
-                        //if viewing high scores
-                    }
-
-                    //return to main screen
-                    MainScreen ms = new MainScreen();
-                    Form f = this.FindForm();
-                    ms.Location = new Point((f.Width - ms.Width) / 2, (f.Height - ms.Height) / 2);
-                    f.Controls.Remove(this);
-                    ms.Size = f.Size;
-                    f.Controls.Add(ms);
-                    ms.Focus();
                     break;
             }
         }
 
         public void Results(int xp)
         {
+            //not focused on screen
+            focus = false;
+
             //update high scores
             hs = new HighScore("YOU", xp);
             scores.Add(hs);
