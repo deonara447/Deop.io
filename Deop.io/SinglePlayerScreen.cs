@@ -90,28 +90,14 @@ namespace Deop.io
         //list of objects to be removed
         List<Square> deadSquareList = new List<Square>();
         List<Hexagon> deadHexagonList = new List<Hexagon>();
-        List<Triangle> deadTriangleList = new List<Triangle>();
-        List<Bullet> deadBulletList = new List<Bullet>();
 
-        //bot objects
-        Bot p1, p2, p3, p4;
-
-        //for checking collisions
-        Rectangle newSquare;
-        Rectangle r;
-
-        //if time for upgrade
-        Boolean boost;
-
-        //random number generator
-        Random randGen = new Random();
-        public SinglePlayerScreen()
+        private void SinglePlayerScreen_Load(object sender, EventArgs e)
         {
-            InitializeComponent();
-            OnStart();
-        }
-        public void OnStart()
-        {
+            //adjusting label locations for various screen resolutions
+            health1Label.Top = this.Height - 20;
+            xp1Label.Top = this.Height - 20;
+            level1Label.Top = this.Height - 20;
+
             //reset variables
             keyCoolDown = attribute = healthRegenCounter = 0;
             squareGenerationSpeed = 300;
@@ -119,11 +105,11 @@ namespace Deop.io
             //create bot objects with attributes and add them to botList
             p1 = new Bot(blueBrush, 1, 40, 40, 40, baseMaxHealth, baseDamage, baseSpeed, "none", baseBulletHealth, baseBulletDamage, baseBulletSpeed, baseReload, baseRegen, baseMaxHealth, 1, 0, 0);
             botList.Add(p1);
-            p2 = new Bot(redBrush, 2, 1520, 40, 40, baseMaxHealth, baseDamage, baseSpeed, "none", baseBulletHealth, baseBulletDamage, baseBulletSpeed, baseReload, 0, baseMaxHealth, 1, 0, 0);
+            p2 = new Bot(redBrush, 2, this.Width - 80, 40, 40, baseMaxHealth, baseDamage, baseSpeed, "none", baseBulletHealth, baseBulletDamage, baseBulletSpeed, baseReload, 0, baseMaxHealth, 1, 0, 0);
             botList.Add(p2);
-            p3 = new Bot(redBrush, 3, 40, 820, 40, baseMaxHealth, baseDamage, baseSpeed, "none", baseBulletHealth, baseBulletDamage, baseBulletSpeed, baseReload, 0, baseMaxHealth, 1, 0, 0);
+            p3 = new Bot(redBrush, 3, 40, this.Height - 80, 40, baseMaxHealth, baseDamage, baseSpeed, "none", baseBulletHealth, baseBulletDamage, baseBulletSpeed, baseReload, 0, baseMaxHealth, 1, 0, 0);
             botList.Add(p3);
-            p4 = new Bot(redBrush, 4, 1520, 820, 40, baseMaxHealth, baseDamage, baseSpeed, "none", baseBulletHealth, baseBulletDamage, baseBulletSpeed, baseReload, 0, baseMaxHealth, 1, 0, 0);
+            p4 = new Bot(redBrush, 4, this.Width - 80, this.Height - 80, 40, baseMaxHealth, baseDamage, baseSpeed, "none", baseBulletHealth, baseBulletDamage, baseBulletSpeed, baseReload, 0, baseMaxHealth, 1, 0, 0);
             botList.Add(p4);
 
             //create 20 squares
@@ -132,8 +118,8 @@ namespace Deop.io
                 addShape = true;
 
                 //random location
-                shapeX = randGen.Next(1, 1600 - squareSize - 1);
-                shapeY = randGen.Next(1, 900 - squareSize - 1);
+                shapeX = randGen.Next(1, this.Width - squareSize - 1);
+                shapeY = randGen.Next(1, this.Height - squareSize - 1);
                 newSquare = new Rectangle(shapeX, shapeY, squareSize, squareSize);
 
                 //check to see if collision with a square
@@ -160,8 +146,8 @@ namespace Deop.io
             //create 5 hexagons
             for (int i = 0; i <= 5; i++)
             {
-                shapeX = randGen.Next(1, 1600 - hexagonSize - 1);
-                shapeY = randGen.Next(1, 900 - hexagonSize - 1);
+                shapeX = randGen.Next(1, this.Width - hexagonSize - 1);
+                shapeY = randGen.Next(1, this.Height - hexagonSize - 1);
                 newSquare = new Rectangle(shapeX, shapeY, hexagonSize, hexagonSize);
 
                 //check to see if collision with a square
@@ -199,6 +185,26 @@ namespace Deop.io
             }
         }
 
+        List<Triangle> deadTriangleList = new List<Triangle>();
+        List<Bullet> deadBulletList = new List<Bullet>();
+
+        //bot objects
+        Bot p1, p2, p3, p4;
+
+        //for checking collisions
+        Rectangle newSquare;
+        Rectangle r;
+
+        //if time for upgrade
+        Boolean boost;
+
+        //random number generator
+        Random randGen = new Random();
+        public SinglePlayerScreen()
+        {
+            InitializeComponent();
+        }
+        
         private void GameScreen_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             //if key is pressed boolean is true

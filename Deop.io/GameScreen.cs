@@ -94,6 +94,117 @@ namespace Deop.io
         //for determining Manhattan distance
         int d1x, d1y, d2x, d2y, d1t, d2t;
 
+        private void GameScreen_Load(object sender, EventArgs e)
+        {
+            //adjusting label locations for various screen resolutions
+            healthTwoLabel.Left = healthTwoLabel.Location.X + this.Width - 1600;
+            healthRegenTwoLabel.Left = healthRegenTwoLabel.Location.X + this.Width - 1600;
+            bodyDamageTwoLabel.Left = bodyDamageTwoLabel.Location.X + this.Width - 1600;
+            bulletSpeedTwoLabel.Left = bulletSpeedTwoLabel.Location.X + this.Width - 1600;
+            bulletHealthTwoLabel.Left = bulletHealthTwoLabel.Location.X + this.Width - 1600;
+            reloadTwoLabel.Left = reloadTwoLabel.Location.X + this.Width - 1600;
+            speedTwoLabel.Left = speedTwoLabel.Location.X + this.Width - 1600;
+            bulletDamageTwoLabel.Left = bulletDamageTwoLabel.Location.X + this.Width - 1600;
+
+            health1Label.Top = this.Height - 20;
+            xp1Label.Top = this.Height - 20;
+            level1Label.Top = this.Height - 20;
+            health2Label.Top = this.Height - 20;
+            xp2Label.Top = this.Height - 20;
+            level2Label.Top = this.Height - 20;
+
+            health2Label.Left = health2Label.Location.X + this.Width - 1600;
+            xp2Label.Left = xp2Label.Location.X + this.Width - 1600;
+            level2Label.Left = level2Label.Location.X + this.Width - 1600;
+
+            //create mega square
+            Square g = new Square(this.Width/2 - 150, this.Height/2 - 150, 300, 2500, 30);
+            squareList.Add(g);
+
+            //game start sound
+            gameStart.Play();
+
+            //reset variables
+            keyCoolDown1 = keyCoolDown2 = attribute1 = attribute2 = healthRegenCounter = 0;
+            squareGenerationSpeed = 300;
+
+            //create bot objects with attributes and add them to botList
+            p1 = new Bot(blueBrush, 1, 50, this.Height/2 - 20, 40, baseMaxHealth, baseDamage, baseSpeed, "none", baseBulletHealth, baseBulletDamage, baseBulletSpeed, baseReload, baseRegen, baseMaxHealth, 1, 0, 0);
+            botList.Add(p1);
+            p2 = new Bot(redBrush, 2, this.Width - 90, this.Height / 2 - 20, 40, baseMaxHealth, baseDamage, baseSpeed, "none", baseBulletHealth, baseBulletDamage, baseBulletSpeed, baseReload, baseRegen, baseMaxHealth, 1, 0, 0);
+            botList.Add(p2);
+
+            //create 20 squares
+            for (int i = 0; i <= 20; i++)
+            {
+                addShape = true;
+
+                //random location
+                shapeX = randGen.Next(1, this.Width - squareSize - 1);
+                shapeY = randGen.Next(1, this.Height - squareSize - 1);
+                newSquare = new Rectangle(shapeX, shapeY, squareSize, squareSize);
+
+                //check to see if collision with a square
+                foreach (Square s in squareList)
+                {
+                    r = new Rectangle(s.x - 1, s.y - 1, s.size + 1, s.size + 1);
+
+                    if (r.IntersectsWith(newSquare))
+                    {
+                        addShape = false;
+                    }
+                }
+
+                //if not colliding, add shape
+                if (addShape == true)
+                {
+                    Square f = new Square(shapeX, shapeY, squareSize, squareHp, squareDamage);
+                    squareList.Add(f);
+                }
+            }
+
+            addShape = true;
+
+            //create 5 hexagons
+            for (int i = 0; i <= 5; i++)
+            {
+                shapeX = randGen.Next(1, this.Width - hexagonSize - 1);
+                shapeY = randGen.Next(1, this.Height - hexagonSize - 1);
+                newSquare = new Rectangle(shapeX, shapeY, hexagonSize, hexagonSize);
+
+                //check to see if collision with a square
+                foreach (Square s in squareList)
+                {
+                    r = new Rectangle(s.x - 1, s.y - 1, s.size + 1, s.size + 1);
+
+                    if (r.IntersectsWith(newSquare))
+                    {
+                        addShape = false;
+                    }
+                }
+
+                //check to see if collision with a hexagon
+                foreach (Hexagon h in hexagonList)
+                {
+                    r = new Rectangle(h.x - 1, h.y - 1, h.size + 1, h.size + 1);
+
+                    if (r.IntersectsWith(newSquare))
+                    {
+                        addShape = false;
+                    }
+                }
+
+                if (addShape == true)
+                {
+                    Hexagon f = new Hexagon(shapeX, shapeY, hexagonSize, hexagonHp, hexagonDamage);
+                    hexagonList.Add(f);
+                }
+
+                //start game
+                gameLoop.Enabled = true;
+            }
+        }
+
         //for drawing shapes
         public SolidBrush blueBrush = new SolidBrush(Color.DeepSkyBlue);
         public SolidBrush redBrush = new SolidBrush(Color.Red);
@@ -128,96 +239,6 @@ namespace Deop.io
         public GameScreen()
         {
             InitializeComponent();
-            OnStart();
-        }
-        public void OnStart()
-        {
-            //game start sound
-            gameStart.Play();
-
-            //reset variables
-            keyCoolDown1 = keyCoolDown2 = attribute1 = attribute2 = healthRegenCounter = 0;
-            squareGenerationSpeed = 300;
-
-            //create bot objects with attributes and add them to botList
-            p1 = new Bot(blueBrush, 1, 50, 430, 40, baseMaxHealth, baseDamage, baseSpeed, "none", baseBulletHealth, baseBulletDamage, baseBulletSpeed, baseReload, baseRegen, baseMaxHealth, 1, 0, 0);
-            botList.Add(p1);
-            p2 = new Bot(redBrush, 2, 1510, 430, 40, baseMaxHealth, baseDamage, baseSpeed, "none", baseBulletHealth, baseBulletDamage, baseBulletSpeed, baseReload, baseRegen, baseMaxHealth, 1, 0, 0);
-            botList.Add(p2);
-
-            //create mega square
-            Square g = new Square(650, 300, 300, 2500, squareSize);
-            squareList.Add(g);
-
-            //create 20 squares
-            for (int i = 0; i <= 20; i++)
-            {
-                addShape = true;
-
-                //random location
-                shapeX = randGen.Next(1, 1600 - squareSize - 1);
-                shapeY = randGen.Next(1, 900 - squareSize - 1);
-                newSquare = new Rectangle(shapeX, shapeY, squareSize, squareSize);
-
-                //check to see if collision with a square
-                foreach (Square s in squareList)
-                {
-                    r = new Rectangle(s.x - 1, s.y - 1, s.size + 1, s.size + 1);
-
-                    if (r.IntersectsWith(newSquare))
-                    {
-                        addShape = false;
-                    }
-                }
-
-                //if not colliding, add shape
-                if (addShape == true)
-                {
-                    Square f = new Square(shapeX, shapeY, squareSize, squareHp, squareDamage);
-                    squareList.Add(f);
-                }
-            }
-
-            addShape = true;
-
-            //create 5 hexagons
-            for (int i = 0; i <= 5; i++)
-            {
-                shapeX = randGen.Next(1, 1600 - hexagonSize - 1);
-                shapeY = randGen.Next(1, 900 - hexagonSize - 1);
-                newSquare = new Rectangle(shapeX, shapeY, hexagonSize, hexagonSize);
-
-                //check to see if collision with a square
-                foreach (Square s in squareList)
-                {
-                    r = new Rectangle(s.x - 1, s.y - 1, s.size + 1, s.size + 1);
-
-                    if (r.IntersectsWith(newSquare))
-                    {
-                        addShape = false;
-                    }
-                }
-
-                //check to see if collision with a hexagon
-                foreach (Hexagon h in hexagonList)
-                {
-                    r = new Rectangle(h.x - 1, h.y - 1, h.size + 1, h.size + 1);
-
-                    if (r.IntersectsWith(newSquare))
-                    {
-                        addShape = false;
-                    }
-                }
-
-                if (addShape == true)
-                {
-                    Hexagon f = new Hexagon(shapeX, shapeY, hexagonSize, hexagonHp, hexagonDamage);
-                    hexagonList.Add(f);
-                }
-
-                //start game
-                gameLoop.Enabled = true;
-            }
         }
 
         private void GameScreen_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
